@@ -34,27 +34,10 @@ read=${read/.meryl/}		  # all read counts
 read_hap1=${read_hap1/.meryl/}    # pat specific mers with read counts
 read_hap2=${read_hap2/.meryl/}    # mat specific mers with read counts
 
-hap_hist=$name.hapmers.hist
 cn_hist="spectra-hap-cn.hist"
 
 echo "
-=== Get histogram from all and inherited hap-mers ==="
-echo
-if [ -s $hap_hist ]; then
-	echo "*** $hap_hist found. Skip re-counting. ***"
-	echo
-else
-	echo -e "Assembly\tkmer_multiplicity\tCount" > $hap_hist
-	meryl histogram $read.meryl | awk -v asm="read-total" '{print asm"\t"$0}' >> $hap_hist
-
-	for hap in $read_hap1 $read_hap2
-	do
-	    meryl histogram $hap.meryl | awk -v asm="${hap}" '{print asm"\t"$0}' >> $hap_hist
-	done
-fi
-
-echo "# Plot $hap_hist"
-$MERQURY/plot/plot_spectra_asm.R -f $hap_hist -o ${hap_hist/.hist/}
+=== Get histogram per inherited hap-mers ==="
 echo
 
 for asm_fa in $asm1_fa $asm2_fa
