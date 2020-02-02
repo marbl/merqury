@@ -53,7 +53,7 @@ Usage: merqury.sh <read-db.meryl> [<mat.meryl> <pat.meryl>] <k> <asm1.fasta> [as
 	*asm1.meryl and asm2.meryl will be generated. Avoid using the same names as the hap-mer dbs
 	<out>		: Output prefix
 ```
-`< >` : required
+`< >` : required  
 `[ ]` : optional
 
 On a cluster:
@@ -63,7 +63,7 @@ ln -s $MERQURY/_submit_merqury.sh		# Link merqury
 ```
 * All `_submit_` scripts assume slurm environment. Change the `sbatch` to match your environment.
 
-## Prepare meryl dbs
+## Prepare meryl dbs (*[see details](https://github.com/marbl/merqury/wiki/1.-Prepare-meryl-dbs)*)
 1. Get the right k size
 2. Build k-mer dbs with meryl
 3. Build hap-mers for trios
