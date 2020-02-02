@@ -1,7 +1,7 @@
 #!/bin/bash
 
 if [[ $# -lt 4 ]]; then
-	echo "Usage: ./plot_block.sh <in.sort.bed> <out> <num_switch> <short_range> [include_gaps]"
+	echo "Usage: ./switch_error.sh <in.sort.bed> <out> <num_switch> <short_range> [include_gaps]"
 	echo "	<in.sort.bed>:	generated with trio/phase_block.sh"
 	echo "	<out>:		output prefix; automatically appends given <num_switch> and <short_range>"
 	echo "	<num_switch>:	number of switches allowed in <short_range>"
@@ -31,14 +31,20 @@ java -jar -Xmx1g $MERQURY/trio/bedMerToPhaseBlock.jar $bed $out $num_switch $sho
 SWITCH_ERR=`awk -v swi=0 -v tot=0 '{swi+=$(NF-1); tot+=$NF} END { print swi"\t"tot"\t"((100.0*swi)/tot)"%" }' $out.phased_block.bed`
 echo "Switch error rate (%) (Num. switches / Total markers found): $SWITCH_ERR"
 
+
 echo "
 java -jar -Xmx1g $MERQURY/eval/bedCalcN50.jar $out.phased_block.bed | tail -n1 | awk -v out=$out -v swi=\"$SWITCH_ERR\" '{print out\"\t\"\$0\"\tswi}' - >> $out.phased_block.stats"
 java -jar -Xmx1g $MERQURY/eval/bedCalcN50.jar $out.phased_block.bed | tail -n1 | awk -v out=$out -v swi="$SWITCH_ERR" '{print out"\t"$0"\t"swi}' - >> $out.phased_block.stats
 
 count=$out.phased_block.counts
 
-echo -e "Block\tRange\tMat\tPat\tSize" > $count
-awk '{ swi=$(NF-1); tot=$NF; {if ($4=="mat") { mat=(tot-swi); pat=swi; } else if ($4=="pat") { mat=swi; pat=(tot-swi); }} {print $4"\t"$1"_"$2"_"$3"\t"mat"\t"pat"\t"($3-$2)}}' $out.phased_block.bed >> $count
+# Get haplotypes
+haplotypes=`cut -f4 $out.phased_block.bed | sort -u | grep -v gap | tr '\n' ' '`
+hap1=`echo $haplotypes | awk '{print $1}'`
+hap2=`echo $haplotypes | awk '{print $2}'`
+
+echo -e "Block\tRange\t$hap1\t$hap2\tSize" > $count
+awk -v hap1=$hap1 -v hap2=$hap2 '{ swi=$(NF-1); tot=$NF; {if ($4==hap1) { hap1=(tot-swi); hap2=swi; } else if ($4=="hap2") { hap1=swi; hap2=(tot-swi); }} {print $4"\t"$1"_"$2"_"$3"\t"hap1"\t"hap2"\t"($3-$2)}}' $out.phased_block.bed >> $count
 
 module load R
 

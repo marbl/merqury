@@ -16,6 +16,9 @@ out=$4
 module load bedtools
 module load samtools
 
+k=`meryl print $hap1 | head -n 2 | tail -n 1 | awk '{print length($1)}'`
+echo "Detected k-mer size: $k"
+
 if [ ! -e $scaff.gaps ]; then
 	echo "
 	Get gaps"
@@ -31,7 +34,7 @@ fi
 
 if [ ! -s $out.sort.bed ]; then
 	echo "
-	Generate pat and mat marker sites bed"
+	Generate haplotype marker sites bed"
 	for hap in $hap1 $hap2
 	do
 		hap=${hap/.meryl/}
@@ -39,7 +42,7 @@ if [ ! -s $out.sort.bed ]; then
 		-- $hap"
 		hap_short=${hap%.*}
 		if [ ! -s $out.$hap.bed ]; then
-			meryl-lookup -dump -memory 4 -sequence $scaff.fasta -mers $hap.meryl | awk -v hap=$hap_short '$(NF-4)=="T" {print $1"\t"$(NF-5)"\t"($(NF-5)+21)"\t"hap}' > $out.$hap.bed
+			meryl-lookup -dump -memory 4 -sequence $scaff.fasta -mers $hap.meryl | awk -v hap=$hap_short -v k=$k '$(NF-4)=="T" {print $1"\t"$(NF-5)"\t"($(NF-5)+k)"\t"hap}' > $out.$hap.bed
 		fi
 		cat $out.$hap.bed >> $out.bed
 
@@ -55,6 +58,6 @@ fi
 
 #$MERQURY/plot/plot_block.sh <in.sort.bed> <out> <num_switch> <short_range> [include_gaps] 
 echo "
-$MERQURY/plot/plot_block.sh $out.sort.bed $out 10 20000 T"
-$MERQURY/plot/plot_block.sh $out.sort.bed $out 10 20000 T
+$MERQURY/trio/switch_error.sh $out.sort.bed $out 10 20000 T"
+$MERQURY/trio/switch_error.sh $out.sort.bed $out 10 20000 T
 
