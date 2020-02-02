@@ -53,7 +53,7 @@ echo "
 Get spectra-cn plots and QV stats"
 name=$out.spectra-cn
 log=logs/$name.log
-nohup sh $MERQURY/eval/spectra-cn.sh $readdb $k $asm1 $asm2 $out > $log
+sh $MERQURY/eval/spectra-cn.sh $readdb $k $asm1 $asm2 $out > $log 2> $log
 
 if [ -z $hap1 ]; then
 	exit 0
@@ -63,28 +63,28 @@ echo "
 Get blob plots"
 name=$out.blob
 log=logs/$name.log
-nohup sh $MERQURY/trio/hap_blob.sh $hap1 $hap2 $asm1 $asm2 $out > $log
+sh $MERQURY/trio/hap_blob.sh $hap1 $hap2 $asm1 $asm2 $out > $log 2> $log
 
 echo "
 Get haplotype specfic spectra-cn plots"
 name=$out.spectra-hap
 log=logs/$name.log
-nohup sh $MERQURY/trio/spectra-hap.sh $readdb $hap1 $hap2 $k $asm1 $asm2 $out > $log
+sh $MERQURY/trio/spectra-hap.sh $readdb $hap1 $hap2 $k $asm1 $asm2 $out > $log 2> $log
 
 echo "
 Get phase blocks"
-name=$out.phase-block
+name=$out.phase-block1
 log=logs/$name.log
 
-echo "
-For $asm1" > $log
-nohup sh $MERQURY/trio/phase_block.sh $asm1 $hap1 $hap2 $out.${asm1/.fasta/}  >> $log
+sh $MERQURY/trio/phase_block.sh $asm1 $hap1 $hap2 $out.${asm1/.fasta/}  > $log 2> $log
+echo
 
 if [ -z $asm2 ] ; then
 	exit 0
 fi
 
-echo "
-For $asm2" >> $log
-nohup sh $MERQURY/trio/phase_block.sh $asm2 $hap1 $hap2 $out.${asm2/.fasta/}  >> $log
+name=$out.phase-block2
+log=logs/$name.log
+sh $MERQURY/trio/phase_block.sh $asm2 $hap1 $hap2 $out.${asm2/.fasta/}  > $log 2> $log
+
 
