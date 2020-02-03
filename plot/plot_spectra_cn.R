@@ -16,6 +16,23 @@ parser$add_argument("-t", "--type", type="character", default="all", help="avail
 parser$add_argument("-p", "--pdf", dest='pdf', default=FALSE, action='store_true', help="get output in .pdf. [default .png]")
 args <- parser$parse_args()
 
+gray = "black"
+red = "#E41A1C"
+blue = "#377EB8" # light blue = "#56B4E9"
+green = "#4DAF4A"
+purple = "#984EA3"  # purple = "#CC79A7"
+orange = "#FF7F00"  # orange = "#E69F00"
+yellow = "#FFFF33"
+
+merqury_col = c(gray, red, blue, green, purple, orange)
+merqury_brw <- function(dat, direction=1) {
+  merqury_colors=merqury_col[1:length(unique(dat))]
+  if (direction == -1) {
+    merqury_colors=rev(merqury_colors)
+  }
+  merqury_colors
+}
+
 ALPHA=0.4
 LINE_SIZE=0.3
 
@@ -33,11 +50,11 @@ fancy_scientific <- function(d) {
 plot_zero_line <- function(zero) {
   if (!is.null(zero)) {
 if (length(zero[,1]) == 2) {
-      scale_fill_manual(values = c("#4DAF4A", "#377EB8"), name="k-mer")
+      scale_fill_manual(values = c(blue, red), name="k-mer")
     } else if (length(zero[,1] == 3)) {
-      scale_fill_manual(values = c("#984EA3", "#4DAF4A", "#377EB8"), name="k-mer")
+      scale_fill_manual(values = c(purple, blue, red), name="k-mer")
     } else {
-      scale_fill_brewer(palette = "Set1", direction=1, name="k-mer")
+      scale_fill_manual(values = merqury_brw(zero[,1]), name="k-mer")
     }
   }
 }
@@ -75,7 +92,7 @@ format_theme <- function() {
 plot_line <- function(dat, name, x_max, y_max, zero, cutoff) {
   ggplot(data=dat, aes(x=kmer_multiplicity, y=Count, group=dat[,1], colour=dat[,1])) +
     geom_line() +
-    scale_color_brewer(palette = "Set1", name="k-mer") +
+    scale_color_manual(values = merqury_brw(dat[,1]), name="k-mer") +
     plot_zero_line(zero=zero) +
     plot_zero_fill(zero=zero) +
     plot_cutoff(cutoff) +
@@ -92,8 +109,8 @@ plot_fill <- function(dat, name, x_max, y_max, zero, cutoff) {
     plot_cutoff(cutoff) +
     theme_bw() +
     format_theme() +
-    scale_color_brewer(palette = "Set1", direction=1, name="k-mer") +
-    scale_fill_brewer(palette = "Set1", direction=1, name="k-mer") +
+    scale_color_manual(values = merqury_brw(dat[,1]), name="k-mer") +
+    scale_fill_manual(values = merqury_brw(dat[,1]), name="k-mer") +
     scale_y_continuous(labels=fancy_scientific) +
     coord_cartesian(xlim=c(0,x_max), ylim=c(0,y_max))
 }
@@ -106,8 +123,8 @@ plot_stack <- function(dat, name, x_max, y_max, zero, cutoff) {
     plot_cutoff(cutoff) +
     theme_bw() +
     format_theme() +
-    scale_color_brewer(palette = "Set1", direction=-1, name="k-mer", breaks=rev(levels(dat[,1]))) +
-    scale_fill_brewer(palette="Set1", direction=-1, name="k-mer", breaks=rev(levels(dat[,1]))) +
+    scale_color_manual(values = merqury_brw(dat[,1], direction=-1), name="k-mer", breaks=rev(levels(dat[,1]))) +
+    scale_fill_manual(values = merqury_brw(dat[,1], direction=-1), name="k-mer", breaks=rev(levels(dat[,1]))) +
     scale_y_continuous(labels=fancy_scientific) +
     coord_cartesian(xlim=c(0,x_max), ylim=c(0,y_max))
 }
@@ -139,7 +156,6 @@ spectra_cn_plot  <-  function(hist, name, zero="", cutoff="", w=6, h=4.5, x_max=
 
   # x and y max
   y_max=max(dat[dat[,1]!="read-total" & dat[,1]!="read-only",]$Count)
-
   if (x_max == 0) {
     x_max=dat[dat[,3]==y_max,]$kmer_multiplicity
   }
