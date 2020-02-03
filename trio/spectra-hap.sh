@@ -1,6 +1,6 @@
 #!/bin/bash
 
-echo "Usage: ./spectra-hap.sh <reads.meryl> <hap1.meryl> <hap2.meryl> <k> <asm1.fasta> [asm2.fasta] <out-prefix>"
+echo "Usage: ./spectra-hap.sh <reads.meryl> <hap1.meryl> <hap2.meryl> <asm1.fasta> [asm2.fasta] <out-prefix>"
 echo
 
 if [[ $# -lt 6 ]]; then
@@ -11,12 +11,11 @@ fi
 read=$1
 read_hap1=$2 # .meryl    Haplotype1 specific kmers with counts from reads
 read_hap2=$3 # .meryl    Haplotype2 specific kmers with counts from reads
-k=$4    # kmer
-asm1_fa=$5 # .fasta    Haplotype1 assembly
-asm2_fa=$6 # .fasta    Haplotype2 assembly
-name=$7    # output prefix
+asm1_fa=$4   # .fasta    Haplotype1 assembly
+asm2_fa=$5   # .fasta    Haplotype2 assembly
+name=$6      # output prefix
 if [ -z $name ]; then
-	name=$6
+	name=$5
 	asm2_fa=""
 fi
 
@@ -24,6 +23,9 @@ if [ -z $read_hap1 ]; then
 	echo "No input provided. Exit."
 	exit -1
 fi
+
+k=`meryl print $read | head -n 2 | tail -n 1 | awk '{print length($1)}'`
+echo "Detected k-mer size $k"
 
 ## Remove this line if R is properly installed ##
 echo "Load R"
@@ -96,7 +98,9 @@ do
 	fi
 
 	echo "# Plot $name.$asm.$read_hap.$cn_hist"
-        $MERQURY/plot/plot_spectra_cn.R -f $name.$asm.$read_hap.$cn_hist -o $name.$asm.$read_hap
+        echo "\
+	$MERQURY/plot/plot_spectra_cn.R -f $name.$asm.$read_hap.$cn_hist -o $name.$asm.$read_hap.spectra-cn"
+        $MERQURY/plot/plot_spectra_cn.R -f $name.$asm.$read_hap.$cn_hist -o $name.$asm.$read_hap.spectra-cn
 	echo
     done
 done
