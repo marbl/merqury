@@ -1,8 +1,7 @@
 #!/bin/bash
 
-echo "Usage: spectra-cn.sh <read.meryl> <k> <asm1.fasta> [asm2.fasta] out-prefix"
+echo "Usage: spectra-cn.sh <read.meryl> <asm1.fasta> [asm2.fasta] out-prefix"
 echo -e "\t<read.meryl>\t: Generated with meryl count from i.e. illumina wgs reads"
-echo -e "\t<k>\t: k-size used to build <read.meryl>"
 echo -e "\t<asm1.fasta>\t: haplotype 1 assembly. gzipped or not"
 echo -e "\t[asm2.fasta]\t: haplotype 2 assembly. gzipped or not"
 echo -e "\t<out-prefix>: output prefix. Required."
@@ -17,13 +16,15 @@ if [[ $# -lt 4  ]]; then
 fi
 
 read=$1
-k=$2
-asm1_fa=$3
-asm2_fa=$4
-name=$5
+asm1_fa=$2
+asm2_fa=$3
+name=$4
+k=`meryl print $read | head -n 2 | tail -n 1 | awk '{print length($1)}'`
+echo "Detected k-mer size $k"
+echo
 
 if [ -z $name ]; then
-	name=$4
+	name=$3
 	asm2_fa=""
 fi
 
@@ -65,8 +66,8 @@ do
 	fi
 
 	echo "# Collect read counts per asm copies"
-	hist=$name.asm.$asm.spectra-cn.hist
-	hist_asm_only=$name.asm.$asm.only.hist
+	hist=$name.$asm.spectra-cn.hist
+	hist_asm_only=$name.$asm.only.hist
 
 	if [[ -s $hist ]]; then
 		echo
@@ -107,7 +108,9 @@ do
 	echo
 
 	echo "# Plot $hist"
-	$MERQURY/plot/plot_spectra_cn.R -f $hist -o $name.asm.$asm -z $hist_asm_only
+	echo "\
+	$MERQURY/plot/plot_spectra_cn.R -f $hist -o $name.$asm.spectra-cn -z $hist_asm_only"
+	$MERQURY/plot/plot_spectra_cn.R -f $hist -o $name.$asm.spectra-cn -z $hist_asm_only
 	echo
 
 	echo "# QV statistics"
@@ -158,6 +161,8 @@ if [[ "$asm2_fa" = "" ]]; then
 	meryl histogram read.k$k.$asm1.meryl | awk -v hap="$asm1" '{print hap"\t"$0}' >> $hist
 
 	echo "#	Plot $hist"
+	echo "\
+	$MERQURY/plot/plot_spectra_asm.R -f $hist -o $name.asm"
 	$MERQURY/plot/plot_spectra_asm.R -f $hist -o $name.asm
 	echo
 
@@ -244,7 +249,9 @@ rm -r ${asm1}.0.only.meryl ${asm2}.0.only.meryl
 echo
 
 echo "# Plot $hist"
-$MERQURY/plot/plot_spectra_cn.R -f $hist -o $name -z $hist_asm_only
+echo "\
+$MERQURY/plot/plot_spectra_cn.R -f $hist -o $name.spectra-cn -z $hist_asm_only"
+$MERQURY/plot/plot_spectra_cn.R -f $hist -o $name.spectra-cn -z $hist_asm_only
 echo
 
 echo "# QV"
@@ -295,7 +302,7 @@ else
 fi
 
 echo "Plot $hist"
-$MERQURY/plot/plot_spectra_cn.R -f $hist -o $name.asm -z $hist_asm_dist_only
+$MERQURY/plot/plot_spectra_cn.R -f $hist -o $name.spectra-asm -z $hist_asm_dist_only
 echo
 
 echo "Clean up"
