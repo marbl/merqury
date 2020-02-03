@@ -10,7 +10,7 @@ Merqury provides a set of tools for this purpose.
 * gcc 4.8 or higher
 * meryl
 * Java run time environment (JRE)
-* R with ggplot2 (tested on R 3.6.1)
+* R with argparser, ggplot2, and scales (tested on R 3.6.1)
 * bedtools
 * samtools
 * igvtools
@@ -41,13 +41,12 @@ Add installation dir paths for `bedtools`, `samtools` and `igvtools` to your env
 On a single machine:
 ```
 ln -s $MERQURY/merqury.sh		# Link merqury
-./merqury.sh <read-db.meryl> [<mat.meryl> <pat.meryl>] <k> <asm1.fasta> [asm2.fasta] <out>
+./merqury.sh <read-db.meryl> [<mat.meryl> <pat.meryl>] <asm1.fasta> [asm2.fasta] <out>
 
 Usage: merqury.sh <read-db.meryl> [<mat.meryl> <pat.meryl>] <k> <asm1.fasta> [asm2.fasta] <out>
 	<read-db.meryl>	: k-mer counts of the read set
 	<mat.meryl>		: k-mer counts of the maternal haplotype (ex. mat.only.meryl or mat.hapmer.meryl)
 	<pat.meryl>		: k-mer counts of the paternal haplotype (ex. pat.only.meryl or pat.hapmer.meryl)
-	<k>			: k size
 	<asm1.fasta>	: Assembly fasta file (ex. pri.fasta, hap1.fasta or maternal.fasta)
 	[asm2.fasta]	: Additional fasta file (ex. alt.fasta, hap2.fasta or paternal.fasta)
 	*asm1.meryl and asm2.meryl will be generated. Avoid using the same names as the hap-mer dbs
@@ -58,8 +57,8 @@ Usage: merqury.sh <read-db.meryl> [<mat.meryl> <pat.meryl>] <k> <asm1.fasta> [as
 
 On a cluster:
 ```
-ln -s $MERQURY/_submit_merqury.sh		# Link merqury
-./_submit_merqury.sh <read-db.meryl> [<mat.meryl> <pat.meryl>] <k> <asm1.fasta> [asm2.fasta] <out>
+ln -s $MERQURY/_submit_merqury.sh	# Link merqury
+./_submit_merqury.sh <read-db.meryl> [<mat.meryl> <pat.meryl>] <asm1.fasta> [asm2.fasta] <out>
 ```
 * All `_submit_` scripts assume slurm environment. Change the `sbatch` to match your environment.
 
