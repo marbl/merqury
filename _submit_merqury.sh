@@ -1,15 +1,14 @@
 #! /bin/bash
 
-if [[ "$#" -lt 4 ]]; then
+if [[ "$#" -lt 3 ]]; then
 	echo
-        echo "Usage: _submit_merqury.sh <read-db.meryl> [<mat.meryl> <pat.meryl>] <k> <asm1.fasta> [asm2.fasta] <out>"
+        echo "Usage: _submit_merqury.sh <read-db.meryl> [<mat.meryl> <pat.meryl>] <asm1.fasta> [asm2.fasta] <out>"
 	echo
 	echo "***Submitter script to run each steps in parallele on slurm. Modify according to your cluster environment.***"
 	echo
         echo -e "\t<read-db.meryl>\t: k-mer counts of the read set"
         echo -e "\t<mat.meryl>\t: k-mer counts of the maternal haplotype (ex. mat.inherited.meryl)"
         echo -e "\t<pat.meryl>\t: k-mer counts of the paternal haplotype (ex. pat.inherited.meryl)"
-        echo -e "\t<k>\t\t: k-mer size"
         echo -e "\t<asm1.fasta>\t: Assembly fasta file (ex. pri.fasta, hap1.fasta or maternal.fasta)"
         echo -e "\t[asm2.fasta]\t: Additional fasta file (ex. alt.fasta, hap2.fasta or paternal.fasta)"
         echo -e "\t\t\t*asm1.meryl and asm2.meryl will be generated. Avoid using the same names as the hap-mer dbs"
@@ -25,24 +24,22 @@ if [[ "$#" -gt 5 ]]; then
         echo "Running Merqury in trio mode..."
         hap1=$2
         hap2=$3
-        k=$4
-        asm1=$5
-        if [[ "$#" -eq 6 ]]; then
-                out=$6
+        asm1=$4
+        if [[ "$#" -eq 5 ]]; then
+                out=$5
         else
-                asm2=$6
-                out=$7
+                asm2=$5
+                out=$6
         fi
-elif [[ "$#" -gt 3 ]]; then
+elif [[ "$#" -gt 2 ]]; then
         echo "No haplotype dbs provided."
         echo "Running Merqury in non-trio mode..."
-        k=$2
-        asm1=$3
-        if [[ "$#" -eq 4 ]]; then
-                out=$4
+        asm1=$2
+        if [[ "$#" -eq 3 ]]; then
+                out=$3
         else
-                asm2=$4
-                out=$5
+                asm2=$3
+                out=$4
         fi
 fi
 
@@ -68,7 +65,7 @@ cpus=32
 mem=48g
 name=$out.spectra-cn
 script="$MERQURY/eval/spectra-cn.sh"
-args="$readdb $k $asm1 $asm2 $out"
+args="$readdb $asm1 $asm2 $out"
 log=logs/$name.%A.log
 
 echo "\
@@ -103,7 +100,7 @@ extra="--dependency=afterok:$jid"	# Re-uses asm.meryl dbs in spectra-cn.sh.
 
 name=$out.spectra-hap
 script="$MERQURY/trio/spectra-hap.sh"
-args="$readdb $hap1 $hap2 $k $asm1 $asm2 $out"
+args="$readdb $hap1 $hap2 $asm1 $asm2 $out"
 log=logs/$name.%A.log
 
 echo "\

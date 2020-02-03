@@ -20,21 +20,22 @@ include_gaps=$5
 out=$out.${num_switch}_$short_range
 
 if [ -s $out.phased_block.bed 2> /dev/null ]; then
-	rm $out.phased_block.bed
-	rm $out.switch.bed 2> /dev/null
+	echo "*** Found $out.phased_block.bed ***"
+else
+	echo "
+	java -jar -Xmx1g $MERQURY/trio/bedMerToPhaseBlock.jar $bed $out $num_switch $short_range $include_gaps"
+	java -jar -Xmx1g $MERQURY/trio/bedMerToPhaseBlock.jar $bed $out $num_switch $short_range $include_gaps
 fi
-
-echo "
-java -jar -Xmx1g $MERQURY/trio/bedMerToPhaseBlock.jar $bed $out $num_switch $short_range $include_gaps"
-java -jar -Xmx1g $MERQURY/trio/bedMerToPhaseBlock.jar $bed $out $num_switch $short_range $include_gaps
+echo
 
 SWITCH_ERR=`awk -v swi=0 -v tot=0 '{swi+=$(NF-1); tot+=$NF} END { print swi"\t"tot"\t"((100.0*swi)/tot)"%" }' $out.phased_block.bed`
-echo "Switch error rate (%) (Num. switches / Total markers found): $SWITCH_ERR"
+echo "$out switch error rate (%) (Num. switches / Total markers found): $SWITCH_ERR" > switches.txt
 
 
 echo "
 java -jar -Xmx1g $MERQURY/eval/bedCalcN50.jar $out.phased_block.bed | tail -n1 | awk -v out=$out -v swi=\"$SWITCH_ERR\" '{print out\"\t\"\$0\"\tswi}' - >> $out.phased_block.stats"
 java -jar -Xmx1g $MERQURY/eval/bedCalcN50.jar $out.phased_block.bed | tail -n1 | awk -v out=$out -v swi="$SWITCH_ERR" '{print out"\t"$0"\t"swi}' - >> $out.phased_block.stats
+echo
 
 count=$out.phased_block.counts
 
@@ -43,8 +44,9 @@ haplotypes=`cut -f4 $out.phased_block.bed | sort -u | grep -v gap | tr '\n' ' '`
 hap1=`echo $haplotypes | awk '{print $1}'`
 hap2=`echo $haplotypes | awk '{print $2}'`
 
+echo "Count $hap1 and $hap2 hap-mers per block to $count"
 echo -e "Block\tRange\t$hap1\t$hap2\tSize" > $count
-awk -v hap1=$hap1 -v hap2=$hap2 '{ swi=$(NF-1); tot=$NF; {if ($4==hap1) { hap1=(tot-swi); hap2=swi; } else if ($4=="hap2") { hap1=swi; hap2=(tot-swi); }} {print $4"\t"$1"_"$2"_"$3"\t"hap1"\t"hap2"\t"($3-$2)}}' $out.phased_block.bed >> $count
+awk -v hap1=$hap1 -v hap2=$hap2 '{ swi=$(NF-1); phase=$NF; {if ($4==hap1) { hap1_cnt=phase; hap2_cnt=swi; } else if ($4==hap2) { hap1_cnt=swi; hap2_cnt=phase; }} {print $4"\t"$1"_"$2"_"$3"\t"hap1_cnt"\t"hap2_cnt"\t"($3-$2)}}' $out.phased_block.bed >> $count
 
 module load R
 

@@ -1,11 +1,10 @@
 #! /bin/bash
 
-if [[ "$#" -lt 4 ]]; then
-	echo "Usage: merqury.sh <read-db.meryl> [<mat.meryl> <pat.meryl>] <k> <asm1.fasta> [asm2.fasta] <out>"
+if [[ "$#" -lt 3 ]]; then
+	echo "Usage: merqury.sh <read-db.meryl> [<mat.meryl> <pat.meryl>] <asm1.fasta> [asm2.fasta] <out>"
 	echo -e "\t<read-db.meryl>\t: k-mer counts of the read set"
 	echo -e "\t<mat.meryl>\t\t: k-mer counts of the maternal haplotype (ex. mat.inherited.meryl)"
 	echo -e "\t<pat.meryl>\t\t: k-mer counts of the paternal haplotype (ex. pat.inherited.meryl)"
-	echo -e "\t<k>\t\t\t: k size"
 	echo -e "\t<asm1.fasta>\t: Assembly fasta file (ex. pri.fasta, hap1.fasta or maternal.fasta)"
 	echo -e "\t[asm2.fasta]\t: Additional fasta file (ex. alt.fasta, hap2.fasta or paternal.fasta)"
 	echo -e "\t*asm1.meryl and asm2.meryl will be generated. Avoid using the same names as the hap-mer dbs"
@@ -16,29 +15,27 @@ fi
 
 readdb=$1
 
-if [[ "$#" -gt 5 ]]; then
+if [[ "$#" -gt 4 ]]; then
 	echo "Haplotype dbs provided."
 	echo "Running Merqury in trio mode..."
 	hap1=$2
 	hap2=$3
-	k=$4
-	asm1=$5
-	if [[ "$#" -eq 6 ]]; then
-		out=$6
+	asm1=$4
+	if [[ "$#" -eq 5 ]]; then
+		out=$5
 	else
-		asm2=$6
-		out=$7
+		asm2=$5
+		out=$6
 	fi
-elif [[ "$#" -gt 3 ]]; then
+elif [[ "$#" -gt 2 ]]; then
 	echo "No haplotype dbs provided."
 	echo "Running Merqury in non-trio mode..."
-	k=$2
 	asm1=$3
-	if [[ "$#" -eq 4 ]]; then
-		out=$4
+	if [[ "$#" -eq 3 ]]; then
+		out=$3
 	else
-		asm2=$4
-		out=$5
+		asm2=$3
+		out=$4
 	fi
 fi
 
@@ -53,7 +50,7 @@ echo "
 Get spectra-cn plots and QV stats"
 name=$out.spectra-cn
 log=logs/$name.log
-sh $MERQURY/eval/spectra-cn.sh $readdb $k $asm1 $asm2 $out > $log 2> $log
+sh $MERQURY/eval/spectra-cn.sh $readdb $asm1 $asm2 $out > $log 2> $log
 
 if [ -z $hap1 ]; then
 	exit 0
@@ -69,7 +66,7 @@ echo "
 Get haplotype specfic spectra-cn plots"
 name=$out.spectra-hap
 log=logs/$name.log
-sh $MERQURY/trio/spectra-hap.sh $readdb $hap1 $hap2 $k $asm1 $asm2 $out > $log 2> $log
+sh $MERQURY/trio/spectra-hap.sh $readdb $hap1 $hap2 $asm1 $asm2 $out > $log 2> $log
 
 echo "
 Get phase blocks"
