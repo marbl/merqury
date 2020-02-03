@@ -10,7 +10,7 @@ Merqury provides a set of tools for this purpose.
 * gcc 4.8 or higher
 * meryl
 * Java run time environment (JRE)
-* R with argparser, ggplot2, and scales (tested on R 3.6.1)
+* R with argparse, ggplot2, and scales (tested on R 3.6.1)
 * bedtools
 * samtools
 * igvtools
