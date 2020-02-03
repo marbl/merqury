@@ -7,14 +7,28 @@ require("scales")
 parser <- ArgumentParser(description = "Make spectra-cn plots. Line, filled, and stacked spectra-cn plots will be generated.")
 parser$add_argument("-f", "--file", type="character", help=".spectra-cn.hist file (required)", default=NULL)
 parser$add_argument("-o", "--output", type="character", help="output prefix (required)")
-parser$add_argument("-z", "--zero-hist", type="character", default="", help=".only.hist file (optional, shows assembly only counts)")
-parser$add_argument("-l", "--cutoff", type="character", default="", help="cutoff.txt file (optional, shows solid k-mer cutoffs)")
+parser$add_argument("-z", "--zero-hist", type="character", default="", help=".only.hist file (optional, assembly only counts)")
+parser$add_argument("-l", "--cutoff", type="character", default="", help="cutoff.txt file (optional, solid k-mer cutoffs)")
 parser$add_argument("-x", "--xdim", type="double", default=6, help="width of plot [default %(default)s]")
-parser$add_argument("-y", "--ydim", type="double", default=3, help="height of plot [default %(default)s]")
-parser$add_argument("-m", "--max", type="integer", default=150, help="maximum limit for k-mer multiplicity [default %(default)s]")
+parser$add_argument("-y", "--ydim", type="double", default=5, help="height of plot [default %(default)s]")
+parser$add_argument("-m", "--xmax", type="integer", default=0, help="maximum limit for k-mer multiplicity [default (x where y=peak) * 2.1]")
 parser$add_argument("-t", "--type", type="character", default="all", help="available types: line, fill, stack, or all. [default %(default)s]")
-parser$add_argument("-p", "--pdf", dest='pdf', default=FALSE, action='store_true', help="set to get output in .pdf. [default .png]")
+parser$add_argument("-p", "--pdf", dest='pdf', default=FALSE, action='store_true', help="get output in .pdf. [default .png]")
 args <- parser$parse_args()
+
+ALPHA=0.4
+LINE_SIZE=0.3
+
+fancy_scientific <- function(d) {
+  # turn in to character string in scientific notation
+  d <- format(d, scientific = TRUE)
+  # quote the part before the exponent to keep all the digits and turn the 'e+' into 10^ format
+  d <- gsub("^(.*)e\\+", "'\\1'%*%10^", d)
+  # convert 0x10^00 to 0
+  d <- gsub("\\'0[\\.0]*\\'(.*)", "'0'", d)
+  # return this as an expression
+  parse(text=d)
+}
 
 plot_zero_line <- function(zero) {
   if (!is.null(zero)) {
@@ -30,22 +44,32 @@ if (length(zero[,1]) == 2) {
 
 plot_cutoff <- function(cutoff) {
   if (!is.null(cutoff)) {
-    geom_vline(data = cutoff, aes(xintercept = cutoff[,2], colour = cutoff[,1]), show.legend = FALSE, linetype="dashed", size=0.3)
+    geom_vline(data = cutoff, aes(xintercept = cutoff[,2], colour = cutoff[,1]), show.legend = FALSE, linetype="dashed", size=LINE_SIZE)
   }
 }
 
 plot_zero_fill <- function(zero) {
   if (!is.null(zero)) {
     geom_bar(data=zero, aes(x=zero[,2], y=zero[,3], fill=zero[,1], colour=zero[,1], group=zero[,1]),
-      position="stack", stat="identity", show.legend = FALSE, width = 2)
+      position="stack", stat="identity", show.legend = FALSE, width = 2, alpha=ALPHA)
   }
 }
 
 plot_zero_stack <- function(zero) {
   if (!is.null(zero)) {
     geom_bar(data=zero, aes(x=zero[,2], y=zero[,3], fill=zero[,1], colour=zero[,1]),
-             position="stack", stat="identity", show.legend = FALSE, width = 2)
+      position="stack", stat="identity", show.legend = FALSE, width = 2, alpha=ALPHA)
   }
+}
+
+format_theme <- function() {
+    theme(legend.text = element_text(size=11),
+          legend.position = c(0.95,0.95),  # Modify this if the legend is covering your favorite circle
+          legend.background = element_rect(size=0.1, linetype="solid", colour ="black"),
+          legend.box.just = "right",
+          legend.justification = c("right", "top"),
+          axis.title=element_text(size=14,face="bold"),
+          axis.text=element_text(size=12))
 }
 
 plot_line <- function(dat, name, x_max, y_max, zero, cutoff) {
@@ -56,40 +80,43 @@ plot_line <- function(dat, name, x_max, y_max, zero, cutoff) {
     plot_zero_fill(zero=zero) +
     plot_cutoff(cutoff) +
     theme_bw() +
-    scale_y_continuous(labels=comma) +
+    format_theme() +
+    scale_y_continuous(labels=fancy_scientific) +
     coord_cartesian(xlim=c(0,x_max), ylim=c(0,y_max))
 }
 
 plot_fill <- function(dat, name, x_max, y_max, zero, cutoff) {
   ggplot(data=dat, aes(x=kmer_multiplicity, y=Count)) +
-    geom_ribbon(aes(ymin=0, ymax=pmax(Count,0), fill=dat[,1], colour=dat[,1]), alpha=0.5, linetype=1) +
+    geom_ribbon(aes(ymin=0, ymax=pmax(Count,0), fill=dat[,1], colour=dat[,1]), alpha=ALPHA, linetype=1) +
     plot_zero_fill(zero=zero) +
     plot_cutoff(cutoff) +
     theme_bw() +
+    format_theme() +
     scale_color_brewer(palette = "Set1", direction=1, name="k-mer") +
     scale_fill_brewer(palette = "Set1", direction=1, name="k-mer") +
-    scale_y_continuous(labels=comma) +
+    scale_y_continuous(labels=fancy_scientific) +
     coord_cartesian(xlim=c(0,x_max), ylim=c(0,y_max))
 }
 
 plot_stack <- function(dat, name, x_max, y_max, zero, cutoff) {
   dat[,1]=factor(dat[,1], levels=rev(levels(dat[,1]))) #[c(4,3,2,1)] reverse the order to stack from read-only
   ggplot(data=dat, aes(x=kmer_multiplicity, y=Count, fill=dat[,1], colour=dat[,1])) +
-    geom_area(size=0.2 , alpha=0.8) +
+    geom_area(size=LINE_SIZE , alpha=ALPHA) +
     plot_zero_stack(zero=zero) +
     plot_cutoff(cutoff) +
     theme_bw() +
+    format_theme() +
     scale_color_brewer(palette = "Set1", direction=-1, name="k-mer", breaks=rev(levels(dat[,1]))) +
     scale_fill_brewer(palette="Set1", direction=-1, name="k-mer", breaks=rev(levels(dat[,1]))) +
-    scale_y_continuous(labels=comma) +
+    scale_y_continuous(labels=fancy_scientific) +
     coord_cartesian(xlim=c(0,x_max), ylim=c(0,y_max))
 }
 
 save_plot <- function(name, type, outformat, h, w) {
-  ggsave(file = paste(name, 'spectra-cn', type, outformat, sep = "."), height = h, width = w)
+  ggsave(file = paste(name, type, outformat, sep = "."), height = h, width = w)
 }
 
-spectra_cn_plot  <-  function(hist, name, zero="", cutoff="", w=5, h=3, x_max=150, type="all", pdf=FALSE) {
+spectra_cn_plot  <-  function(hist, name, zero="", cutoff="", w=6, h=4.5, x_max="", type="all", pdf=FALSE) {
   # Read hist
   dat=read.table(hist, header=TRUE)
   dat[,1]=factor(dat[,1], levels=unique(dat[,1]), ordered=TRUE) # Lock in the order
@@ -110,8 +137,15 @@ spectra_cn_plot  <-  function(hist, name, zero="", cutoff="", w=5, h=3, x_max=15
     dat_cut[,1]=factor(dat_cut[,1], levels=unique(dat_cut[,1]), ordered=TRUE)
   }
 
+  # x and y max
   y_max=max(dat[dat[,1]!="read-total" & dat[,1]!="read-only",]$Count)
-  y_max=y_max*1.5
+
+  if (x_max == 0) {
+    x_max=dat[dat[,3]==y_max,]$kmer_multiplicity
+  }
+  x_max=x_max*2.5
+  print(paste("x_max:", x_max, sep=" "))
+  y_max=y_max*1.1
   print(paste("y_max:", y_max, sep=" "))
 
   outformat="png"
@@ -138,6 +172,6 @@ spectra_cn_plot  <-  function(hist, name, zero="", cutoff="", w=5, h=3, x_max=15
   }
 }
 
-spectra_cn_plot(hist = args$file, name = args$output, zero = args$zero, cutoff = args$cutoff, h = args$ydim, w = args$xdim, x_max = args$max, type = args$type, pdf = args$pdf)
+spectra_cn_plot(hist = args$file, name = args$output, zero = args$zero, cutoff = args$cutoff, h = args$ydim, w = args$xdim, x_max = args$xmax, type = args$type, pdf = args$pdf)
 
 
