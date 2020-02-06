@@ -60,4 +60,6 @@ fi
 echo "
 $MERQURY/trio/switch_error.sh $out.sort.bed $out 10 20000 T"
 $MERQURY/trio/switch_error.sh $out.sort.bed $out 10 20000 T
+echo
+
 
