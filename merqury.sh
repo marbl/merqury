@@ -77,6 +77,13 @@ sh $MERQURY/trio/phase_block.sh $asm1 $hap1 $hap2 $out.${asm1/.fasta/}  > $log 2
 echo
 
 if [ -z $asm2 ] ; then
+	echo "
+	Get block N plots"
+	name=$out.block_N
+	log=logs/$name.log
+
+	sh $MERQURY/trio/phase_block.sh $asm1 $out.${asm1/.fasta/}.*.phased_block.bed $out
+
 	exit 0
 fi
 
@@ -84,4 +91,9 @@ name=$out.phase-block2
 log=logs/$name.log
 sh $MERQURY/trio/phase_block.sh $asm2 $hap1 $hap2 $out.${asm2/.fasta/}  > $log 2> $log
 
+echo "
+Get block N plots"
+name=$out.block_N
+log=logs/$name.log
 
+sh $MERQURY/trio/phase_block.sh $asm1 $out.${asm1/.fasta/}.*.phased_block.bed $asm2 $out.${asm2/.fasta/}.*.phased_block.bed $out

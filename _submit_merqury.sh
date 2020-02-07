@@ -19,7 +19,7 @@ fi
 
 readdb=$1
 
-if [[ "$#" -gt 5 ]]; then
+if [[ "$#" -gt 4 ]]; then
         echo "Haplotype dbs provided."
         echo "Running Merqury in trio mode..."
         hap1=$2
@@ -61,8 +61,8 @@ extra=""
 
 
 #### Get spectra-cn plots and QV stats
-cpus=32
-mem=48g
+cpus=24
+mem=24g
 name=$out.spectra-cn
 script="$MERQURY/eval/spectra-cn.sh"
 args="$readdb $asm1 $asm2 $out"
@@ -131,9 +131,26 @@ sbatch -J $name --mem=$mem --partition=$partition --cpus-per-task=$cpus -D $path
 sbatch -J $name --mem=$mem --partition=$partition --cpus-per-task=$cpus -D $path $extra --time=$walltime --error=$log --output=$log $script $args > block1.jid
 
 if [[ "$asm2" == "" ]] ; then
+	# Compute block stats
+	cpus=4
+	mem=8g
+	name="$out.block_N1"
+	log=logs/$name.%A.log
+	extra="--dependency=afterok:`cat block1.jid`"
+
+	# ./block_n_stats.sh <asm1.fasta> <asm1.*.phased_block.bed> [<asm2.fasta> <asm2.*.phased_block.bed>] <out> [genome_size]
+	script="$MERQURY/trio/block_n_stats.sh"
+	args="$asm1 $out.${asm1/.fasta/}.*.phased_block.bed $out"
+
+	echo "\
+	sbatch -J $name --mem=$mem --partition=$partition --cpus-per-task=$cpus -D $path $extra --time=$walltime --error=$log --output=$log $script $args"
+	sbatch -J $name --mem=$mem --partition=$partition --cpus-per-task=$cpus -D $path $extra --time=$walltime --error=$log --output=$log $script $args > block1_N.jid
 	exit 0
 fi
 
+cpus=12
+mem=72g
+extra=""
 args="$asm2 $hap1 $hap2 $out.${asm2/.fasta/}"
 name=$out.phase-block.${asm2/.fasta/}
 log=logs/$name.%A.log
@@ -141,4 +158,19 @@ log=logs/$name.%A.log
 echo "\
 sbatch -J $name --mem=$mem --partition=$partition --cpus-per-task=$cpus -D $path $extra --time=$walltime --error=$log --output=$log $script $args"
 sbatch -J $name --mem=$mem --partition=$partition --cpus-per-task=$cpus -D $path $extra --time=$walltime --error=$log --output=$log $script $args > block2.jid
+
+# Compute block stats
+cpus=4
+mem=8g
+extra="--dependency=afterok:`cat block2.jid`"
+
+# ./block_n_stats.sh <asm1.fasta> <asm1.*.phased_block.bed> [<asm2.fasta> <asm2.*.phased_block.bed>] <out> [genome_size]
+script="$MERQURY/trio/block_n_stats.sh"
+args="$asm1 $out.${asm1/.fasta/}.*.phased_block.bed $asm2 $out.${asm2/.fasta/}.*.phased_block.bed $out"
+name=$out.block_N
+log=logs/$name.%A.log
+
+echo "\
+sbatch -J $name --mem=$mem --partition=$partition --cpus-per-task=$cpus -D $path $extra --time=$walltime --error=$log --output=$log $script $args"
+sbatch -J $name --mem=$mem --partition=$partition --cpus-per-task=$cpus -D $path $extra --time=$walltime --error=$log --output=$log $script $args > block2_N.jid
 
