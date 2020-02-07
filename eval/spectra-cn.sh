@@ -10,7 +10,7 @@ echo -e "\t\tWhen <asm2.fasta> is given, results will be generated for each asm1
 echo
 
 
-if [[ $# -lt 4  ]]; then
+if [[ $# -lt 3 ]]; then
     echo "No args provided. Exit."
     exit -1
 fi
