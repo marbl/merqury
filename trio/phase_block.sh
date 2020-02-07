@@ -58,8 +58,8 @@ fi
 
 #$MERQURY/plot/plot_block.sh <in.sort.bed> <out> <num_switch> <short_range> [include_gaps] 
 echo "
-$MERQURY/trio/switch_error.sh $out.sort.bed $out 10 20000 T"
-$MERQURY/trio/switch_error.sh $out.sort.bed $out 10 20000 T
+$MERQURY/trio/switch_error.sh $out.sort.bed $out 100 20000 T"
+$MERQURY/trio/switch_error.sh $out.sort.bed $out 100 20000 T
 echo
 
 
