@@ -62,16 +62,24 @@ ln -s $MERQURY/_submit_merqury.sh	# Link merqury
 ```
 * All `_submit_` scripts assume slurm environment. Change the `sbatch` to match your environment.
 
-## Prepare meryl dbs (*[see details](https://github.com/marbl/merqury/wiki/1.-Prepare-meryl-dbs)*)
+## Prepare meryl dbs ([details](https://github.com/marbl/merqury/wiki/1.-Prepare-meryl-dbs))
 1. Get the right k size
 2. Build k-mer dbs with meryl
 3. Build hap-mers for trios
 
-## Outline
-1. Overall assembly evaluation
-2. Phasing assessment with hap-mers
+## 2. Overall assembly evaluation ([details](https://github.com/marbl/merqury/wiki/2.-Overall-k-mer-evaluation))
+1. Reference free QV estimate
+2. k-mer completeness (recovery rate)
+3. Spectra copy number analysis
+4. Track error bases in the assembly
 
-
+## 3. Phasing assessment with hap-mers ([details](https://github.com/marbl/merqury/wiki/3.-Phasing-assessment-with-hap-mers))
+1. Inherited hap-mer plots
+2. Hap-mer blob plots
+3. Hap-mer completeness (recovery rate)
+4. Spectra copy number analysis per hap-mers
+5. Phased block statistics and switch error rates
+6. Track each haplotype block in the assembly
 
 
 ## Citing merqury
