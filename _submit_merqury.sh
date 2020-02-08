@@ -116,14 +116,9 @@ script="$MERQURY/trio/phase_block.sh"
 # ./phase_block.sh <asm.fasta> <mat.meryl> <pat.meryl> <out>
 
 
-if [[ "$asm2" == "" ]] ; then
-	# Only one assembly given.
-	args="$asm1 $hap1 $hap2 $out"
-        name=$out.phase-block
-else
-	args="$asm1 $hap1 $hap2 $out.${asm1/.fasta/}"
-	name=$out.phase-block.${asm1/.fasta/}
-fi
+# Only one assembly given.
+args="$asm1 $hap1 $hap2 $out.${asm1/.fasta/}"
+name=$out.phase-block.${asm1/.fasta/}
 log=logs/$name.%A.log
 
 echo "\

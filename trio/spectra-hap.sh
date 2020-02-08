@@ -3,7 +3,7 @@
 echo "Usage: ./spectra-hap.sh <reads.meryl> <hap1.meryl> <hap2.meryl> <asm1.fasta> [asm2.fasta] <out-prefix>"
 echo
 
-if [[ $# -lt 6 ]]; then
+if [[ $# -lt 5 ]]; then
 	echo "Not enough arguements given."
 	exit -1
 fi
