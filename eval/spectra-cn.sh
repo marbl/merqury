@@ -162,8 +162,8 @@ if [[ "$asm2_fa" = "" ]]; then
 
 	echo "#	Plot $hist"
 	echo "\
-	$MERQURY/plot/plot_spectra_asm.R -f $hist -o $name.asm"
-	$MERQURY/plot/plot_spectra_asm.R -f $hist -o $name.asm
+	$MERQURY/plot/plot_spectra_cn.R -f $hist -o $name.asm"
+	$MERQURY/plot/plot_spectra_cn.R -f $hist -o $name.asm
 	echo
 
 	echo "# Clean up"
