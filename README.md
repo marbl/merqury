@@ -62,7 +62,7 @@ ln -s $MERQURY/_submit_merqury.sh	# Link merqury
 ```
 * All `_submit_` scripts assume slurm environment. Change the `sbatch` to match your environment.
 
-## Prepare meryl dbs ([details](https://github.com/marbl/merqury/wiki/1.-Prepare-meryl-dbs))
+## 1. Prepare meryl dbs ([details](https://github.com/marbl/merqury/wiki/1.-Prepare-meryl-dbs))
 1. Get the right k size
 2. Build k-mer dbs with meryl
 3. Build hap-mers for trios
