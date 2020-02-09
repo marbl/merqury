@@ -19,7 +19,7 @@ module load samtools
 k=`meryl print $hap1 | head -n 2 | tail -n 1 | awk '{print length($1)}'`
 echo "Detected k-mer size: $k"
 
-if [ ! -e $scaff.gaps ]; then
+if [[ ! -e $scaff.gaps ]]; then
 	echo "
 	Get gaps"
 	java -jar -Xmx4g $MERQURY/trio/fastaGetGaps.jar $scaff.fasta $scaff.gaps
