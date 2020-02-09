@@ -33,7 +33,7 @@ save_plot <- function(name, type, stats, outformat, h, w) {
 attach_n <- function(dat, gsize=0) {
   dat = read.table(dat, header = F)
   names(dat) = c("Type", "Group", "Size")
-  dat$Sum = cumsum(dat$Size)
+  dat$Sum = cumsum(as.numeric(dat$Size))
   
   if (gsize == 0) {
     # N*
