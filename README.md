@@ -18,8 +18,10 @@ Merqury provides a set of tools for this purpose.
 ## Installation
 
 ### Get a working meryl in your PATH
+Download meryl release: https://github.com/marbl/meryl/releases/tag/v1.0
+
+If the binary doesn't work, download the source and compile:
 ```shell
-git clone https://github.com/marbl/meryl.git
 cd meryl/src
 make -j 24
 export PATH=/path/to/meryl/…/bin:$PATH
