@@ -6,8 +6,8 @@ if [[ $# -lt 4 ]]; then
 	echo "	<out>:		output prefix; automatically appends given <num_switch> and <short_range>"
 	echo "	<num_switch>:	number of switches allowed in <short_range>"
 	echo "	<short_range>:	interval to be determined as short-range switch (bp)"
-	echo "	<include_gaps>:	T for including gaps. Only set for phased assemblies"
-	echo "Arang Rhie, 2020-01-07. arrhie@gmail.com"
+	echo "	[include_gaps]:	F for excluding gaps. Set for restricting to in-contig blocks [DEFAUTL=T]"
+	echo "Arang Rhie, 2020-02-13. arrhie@gmail.com"
 	exit -1
 fi
 
