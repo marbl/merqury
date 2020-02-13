@@ -49,9 +49,11 @@ fancy_scientific <- function(d) {
 
 plot_zero_line <- function(zero) {
   if (!is.null(zero)) {
-if (length(zero[,1]) == 2) {
+    if (length(zero[,1]) == 1) {
+      scale_fill_manual(values = c(red), name="k-mer")
+    } else if (length(zero[,1]) == 2) {
       scale_fill_manual(values = c(blue, red), name="k-mer")
-    } else if (length(zero[,1] == 3)) {
+    } else if (length(zero[,1]) == 3) {
       scale_fill_manual(values = c(purple, blue, red), name="k-mer")
     } else {
       scale_fill_manual(values = merqury_brw(zero[,1]), name="k-mer")
@@ -161,6 +163,9 @@ spectra_cn_plot  <-  function(hist, name, zero="", cutoff="", w=6, h=4.5, x_max=
   }
   x_max=x_max*2.5
   print(paste("x_max:", x_max, sep=" "))
+  if (zero != "") {
+    y_max=max(y_max, sum(dat_0[,3]))	# Check once more when dat_0 is available
+  }
   y_max=y_max*1.1
   print(paste("y_max:", y_max, sep=" "))
 
