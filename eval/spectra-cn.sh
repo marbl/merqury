@@ -147,27 +147,36 @@ do
 	echo
 done
 
+hist_asm_dist_only=$name.dist_only.hist
 if [[ "$asm2_fa" = "" ]]; then
 	echo "No asm2_fa given. Done."
 
 	hist=$name.spectra-asm.hist
 
-	echo "# $asm1 only"
-	meryl intersect output read.k$k.$asm1.meryl $read ${asm1}.meryl
+	if [[ -s $hist ]]; then
+		echo "*** Found $hist ***"
+	else
+		echo "# $asm1 only"
+		meryl intersect output read.k$k.$asm1.meryl $read ${asm1}.meryl
 
-	echo "# Write output"
-	echo -e "Assembly\tkmer_multiplicity\tCount" > $hist
-	meryl histogram read.k$k.$asm1.0.meryl | awk '{print "read-only\t"$0}' >> $hist
-	meryl histogram read.k$k.$asm1.meryl | awk -v hap="$asm1" '{print hap"\t"$0}' >> $hist
+		echo "# Write output"
+		echo -e "Assembly\tkmer_multiplicity\tCount" > $hist
+		meryl histogram read.k$k.$asm1.0.meryl | awk '{print "read-only\t"$0}' >> $hist
+		meryl histogram read.k$k.$asm1.meryl | awk -v hap="${asm1}" '{print hap"\t"$0}' >> $hist
+
+		echo "# Get asm only for spectra-asm"
+		ASM1_ONLY=`meryl statistics ${asm1}.0.meryl | head -n3 | tail -n1 | awk '{print $2}'`
+		echo -e "${asm1}\t0\t$ASM1_ONLY" > $hist_asm_dist_only
+	fi
 
 	echo "#	Plot $hist"
 	echo "\
-	$MERQURY/plot/plot_spectra_cn.R -f $hist -o $name.asm"
-	$MERQURY/plot/plot_spectra_cn.R -f $hist -o $name.asm
+	$MERQURY/plot/plot_spectra_cn.R -f $hist -o $name.spectra-asm -z $hist_asm_dist_only"
+	$MERQURY/plot/plot_spectra_cn.R -f $hist -o $name.spectra-asm -z $hist_asm_dist_only
 	echo
 
 	echo "# Clean up"
-	rm -r ${asm1}.0.meryl read.k$k.$asm1.0.meryl read.k$k.$asm1.meryl
+	rm -r ${asm1}.0.meryl read.k$k.$asm1.0.meryl read.k$k.$asm1.meryl $read_solid
 	echo "Done!"
 
 	exit 0
@@ -184,7 +193,7 @@ meryl intersect output ${asm1}_${asm2}.solid.meryl ${asm1}_${asm2}_union.meryl $
 TOTAL=`meryl statistics $read_solid | head -n3 | tail -n1 | awk '{print $2}'`
 ASM=`meryl statistics ${asm1}_${asm2}.solid.meryl | head -n3 | tail -n1 | awk '{print $2}'`
 echo -e "both\tall\t${ASM}\t${TOTAL}" | awk '{print $0"\t"((100*$3)/$4)}' >> completeness.stats
-rm -r ${asm1}_${asm2}.solid.meryl
+rm -r ${asm1}_${asm2}.solid.meryl $read_solid
 echo
 
 echo "# 0-counts in the asm; only seen in the reads"
