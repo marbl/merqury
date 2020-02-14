@@ -157,7 +157,7 @@ sbatch -J $name --mem=$mem --partition=$partition --cpus-per-task=$cpus -D $path
 # Compute block stats
 cpus=4
 mem=8g
-extra="--dependency=afterok:`cat block2.jid`"
+extra="--dependency=afterok:`cat block1.jid`,afterok:`cat block2.jid`"
 
 # ./block_n_stats.sh <asm1.fasta> <asm1.*.phased_block.bed> [<asm2.fasta> <asm2.*.phased_block.bed>] <out> [genome_size]
 script="$MERQURY/trio/block_n_stats.sh"
