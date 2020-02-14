@@ -17,8 +17,8 @@ if [[ "$#" -lt 2 ]]; then
 fi
 
 mat_meryl=$1
-pat_meryl=$3
-child_meryl=$4
+pat_meryl=$2
+child_meryl=$3
 
 mkdir -p logs
 
@@ -29,9 +29,9 @@ walltime=3:00:00
 name=hapmers
 script=$MERQURY/trio/hapmers.sh
 args="$mat_meryl $pat_meryl $child_meryl"
-log=logs/$name.%A_%a.log
+log=logs/$name.%A.log
 
 echo "\
-sbatch -J $name --mem=$mem --partition=$partition --cpus-per-task=$cpus -D $path --time=$walltime --error=$log --output=$log $script $args"
-sbatch -J $name --mem=$mem --partition=$partition --cpus-per-task=$cpus -D $path --time=$walltime --error=$log --output=$log $script $args
+sbatch -J $name --mem=$mem --partition=$partition --cpus-per-task=$cpus -D `pwd` --time=$walltime --error=$log --output=$log $script $args"
+sbatch -J $name --mem=$mem --partition=$partition --cpus-per-task=$cpus -D `pwd` --time=$walltime --error=$log --output=$log $script $args
 
