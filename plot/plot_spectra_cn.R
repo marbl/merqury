@@ -157,7 +157,7 @@ spectra_cn_plot  <-  function(hist, name, zero="", cutoff="", w=6, h=4.5, x_max=
   }
 
   # x and y max
-  y_max=max(dat[dat[,1]!="read-total" & dat[,1]!="read-only",]$Count)
+  y_max=max(dat[dat[,1]!="read-total" & dat[,1]!="read-only" & dat[,2] > 3,]$Count)
   if (x_max == 0) {
     x_max=dat[dat[,3]==y_max,]$kmer_multiplicity
   }
