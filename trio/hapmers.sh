@@ -1,6 +1,6 @@
 #!/bin/bash
 
-if [[ "$#" -lt 3 ]]; then
+if [[ "$#" -lt 2 ]]; then
 	echo
 	echo "Usage: hapmers.sh <hap1.meryl> <hap2.meryl> [child.meryl]"
 	echo -e "\t<hap1.meryl>\tHaplotype1 k-mers (all, ex. maternal)"
