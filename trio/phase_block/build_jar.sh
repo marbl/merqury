@@ -1,6 +1,8 @@
 #!/bin/bash
 
-echo "Re build MerToPhaseBlock.jar"
+echo "Re build bedMerToPhaseBlock.jar"
+echo
+echo "This script is provided for manually building the bedMerToPhaseBlock.jar when needed."
 
 mkdir -p bin
 
