@@ -12,6 +12,7 @@ parser$add_argument("-l", "--cutoff", type="character", default="", help="cutoff
 parser$add_argument("-x", "--xdim", type="double", default=6, help="width of plot [default %(default)s]")
 parser$add_argument("-y", "--ydim", type="double", default=5, help="height of plot [default %(default)s]")
 parser$add_argument("-m", "--xmax", type="integer", default=0, help="maximum limit for k-mer multiplicity [default (x where y=peak) * 2.1]")
+parser$add_argument("-n", "--ymax", type="integer", default=0, help="maximum limit for k-mer count [default (y where y=peak) * 1.1]")
 parser$add_argument("-t", "--type", type="character", default="all", help="available types: line, fill, stack, or all. [default %(default)s]")
 parser$add_argument("-p", "--pdf", dest='pdf', default=FALSE, action='store_true', help="get output in .pdf. [default .png]")
 args <- parser$parse_args()
@@ -125,8 +126,8 @@ plot_stack <- function(dat, name, x_max, y_max, zero, cutoff) {
     plot_cutoff(cutoff) +
     theme_bw() +
     format_theme() +
-    scale_color_manual(values = merqury_brw(dat[,1], direction=-1), name="k-mer", breaks=rev(levels(dat[,1]))) +
-    scale_fill_manual(values = merqury_brw(dat[,1], direction=-1), name="k-mer", breaks=rev(levels(dat[,1]))) +
+    scale_color_manual(values = merqury_brw(dat[,1], direction=1), name="k-mer", breaks=rev(levels(dat[,1]))) +
+    scale_fill_manual(values = merqury_brw(dat[,1], direction=1), name="k-mer", breaks=rev(levels(dat[,1]))) +
     scale_y_continuous(labels=fancy_scientific) +
     coord_cartesian(xlim=c(0,x_max), ylim=c(0,y_max))
 }
@@ -135,7 +136,7 @@ save_plot <- function(name, type, outformat, h, w) {
   ggsave(file = paste(name, type, outformat, sep = "."), height = h, width = w)
 }
 
-spectra_cn_plot  <-  function(hist, name, zero="", cutoff="", w=6, h=4.5, x_max="", type="all", pdf=FALSE) {
+spectra_cn_plot  <-  function(hist, name, zero="", cutoff="", w=6, h=4.5, x_max, y_max, type="all", pdf=FALSE) {
   # Read hist
   dat=read.table(hist, header=TRUE)
   dat[,1]=factor(dat[,1], levels=unique(dat[,1]), ordered=TRUE) # Lock in the order
@@ -157,16 +158,22 @@ spectra_cn_plot  <-  function(hist, name, zero="", cutoff="", w=6, h=4.5, x_max=
   }
 
   # x and y max
-  y_max=max(dat[dat[,1]!="read-total" & dat[,1]!="read-only" & dat[,2] > 3,]$Count)
+  y_max_given=TRUE;
+  if (y_max == 0) {
+    y_max=max(dat[dat[,1]!="read-total" & dat[,1]!="read-only" & dat[,2] > 3,]$Count)
+    y_max_given=FALSE;
+  }
   if (x_max == 0) {
     x_max=dat[dat[,3]==y_max,]$kmer_multiplicity
+    x_max=x_max*2.5
   }
-  x_max=x_max*2.5
+  if (! y_max_given) {
+    y_max=y_max*1.1
+  }
   print(paste("x_max:", x_max, sep=" "))
   if (zero != "") {
-    y_max=max(y_max, sum(dat_0[,3]))	# Check once more when dat_0 is available
+    y_max=max(y_max, sum(dat_0[,3]*1.1))	# Check once more when dat_0 is available
   }
-  y_max=y_max*1.1
   print(paste("y_max:", y_max, sep=" "))
 
   outformat="png"
@@ -193,6 +200,6 @@ spectra_cn_plot  <-  function(hist, name, zero="", cutoff="", w=6, h=4.5, x_max=
   }
 }
 
-spectra_cn_plot(hist = args$file, name = args$output, zero = args$zero, cutoff = args$cutoff, h = args$ydim, w = args$xdim, x_max = args$xmax, type = args$type, pdf = args$pdf)
+spectra_cn_plot(hist = args$file, name = args$output, zero = args$zero, cutoff = args$cutoff, h = args$ydim, w = args$xdim, x_max = args$xmax, y_max = args$ymax, type = args$type, pdf = args$pdf)
 
 
