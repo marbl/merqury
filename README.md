@@ -144,7 +144,9 @@ Meryl dbs from Illumina WGS and hapmers are available [here](https://obj.umiacs.
 
 ## Citing merqury
 
-There will be a preprint available soon. Until then, please cite this github repo.
+Please use the following [preprint](https://www.biorxiv.org/content/10.1101/2020.03.15.992941v1) to cite Merqury:
+
+Arang Rhie, Brian P. Walenz, Sergey Koren, Adam M. Phillippy, Merqury: reference-free quality and phasing assessment for genome assemblies, bioRxiv (2020). doi: https://doi.org/10.1101/2020.03.15.992941
 
 
 
