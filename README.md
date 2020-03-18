@@ -31,6 +31,7 @@ See if we get help message for `meryl`.
 ### Add a path variable MERQURY
 ```shell
 git clone https://github.com/marbl/merqury.git
+cd merqury
 export MERQURY=$PWD
 ```
 Add the “export” part to your environment (~/.bash_profile or ~/.profile).
