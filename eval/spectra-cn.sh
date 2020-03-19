@@ -88,7 +88,7 @@ do
 		echo "# Copy 1 ~ 4"
 		for i in $(seq 1 4)
 		do
-		    echo "Copy = 1 .."
+		    echo "Copy = $i .."
 		    meryl intersect output read.k$k.$asm.$i.meryl $read [ equal-to $i ${asm}.meryl ]
 		    meryl histogram read.k$k.$asm.$i.meryl | awk -v cn=$i '{print cn"\t"$0}' >> $hist
 		    rm -r read.k$k.$asm.$i.meryl
