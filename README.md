@@ -31,6 +31,7 @@ See if we get help message for `meryl`.
 ### Add a path variable MERQURY
 ```shell
 git clone https://github.com/marbl/merqury.git
+cd merqury
 export MERQURY=$PWD
 ```
 Add the “export” part to your environment (~/.bash_profile or ~/.profile).
@@ -136,10 +137,17 @@ Following wiki pages have more detailed examples.
 5. Phased block statistics and switch error rates
 6. Track each haplotype block in the assembly
 
+## Available pre-built meryl dbs
+Meryl dbs from Illumina WGS and hapmers are available [here](https://obj.umiacs.umd.edu/marbl_publications/merqury/index.html) for
+* A. thaliana COL-0 x CVI-0 F1
+* NA12878 (HG001)
+* HG002
 
 ## Citing merqury
 
-There will be a preprint available soon. Until then, please cite this github repo.
+Please use the following [preprint](https://www.biorxiv.org/content/10.1101/2020.03.15.992941v1) to cite Merqury:
+
+Arang Rhie, Brian P. Walenz, Sergey Koren, Adam M. Phillippy, Merqury: reference-free quality and phasing assessment for genome assemblies, bioRxiv (2020). doi: https://doi.org/10.1101/2020.03.15.992941
 
 
 
