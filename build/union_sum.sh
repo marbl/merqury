@@ -58,7 +58,7 @@ do
 	        k=$k \
 	        union-sum \
 	        output $output \
-	        $meryl
+	        $meryl || exit -1;
 	fi
 done
 

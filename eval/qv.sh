@@ -13,9 +13,10 @@ if [[ "$#" -lt 3 ]]; then
 	exit 0
 fi
 
-read_db=$1
-asm1_fa=$2
-asm2_fa=$3
+source $MERQURY/util/util.sh
+
+read_db=`link $1`
+asm1_fa=`link $2`
 name=$4
 
 k=`meryl print $read_db | head -n 2 | tail -n 1 | awk '{print length($1)}'`
@@ -25,7 +26,8 @@ if [[ "$#" -eq 3 ]]; then
 	asm2_fa=""
 	name=$3
 else
-	echo "Found asm2: $asm2"
+	asm2_fa=`link $3`
+	echo "Found asm2: $asm2_fa"
 fi
 
 asm1=`echo $asm1_fa | sed 's/.fasta.gz//g' | sed 's/.fa.gz//g' | sed 's/.fasta//g' | sed 's/.fa//g'`

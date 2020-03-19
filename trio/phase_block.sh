@@ -6,11 +6,13 @@ if [[ $# -lt 4 ]]; then
 	exit -1
 fi
 
-scaff=$1
+source $MERQURY/util/util.sh
+
+scaff=`link $1`
 scaff=${scaff/.fasta/}
 
-hap1=$2
-hap2=$3
+hap1=`link $2`
+hap2=`link $3`
 out=$4
 
 module load bedtools

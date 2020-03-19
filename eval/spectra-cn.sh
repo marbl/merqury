@@ -15,10 +15,12 @@ if [[ $# -lt 3 ]]; then
     exit -1
 fi
 
-read=$1
-asm1_fa=$2
-asm2_fa=$3
+source $MERQURY/util/util.sh
+
+read=`link $1`
+asm1_fa=`link $2`
 name=$4
+
 k=`meryl print $read | head -n 2 | tail -n 1 | awk '{print length($1)}'`
 echo "Detected k-mer size $k"
 echo
@@ -26,6 +28,8 @@ echo
 if [ -z $name ]; then
 	name=$3
 	asm2_fa=""
+else
+	asm2_fa=`link $3`
 fi
 
 if [ -s $name ]; then

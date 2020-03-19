@@ -13,31 +13,49 @@ if [[ "$#" -lt 3 ]]; then
 	exit 0
 fi
 
-readdb=$1
+source $MERQURY/util/util.sh
+
+readdb=`link $1`
+echo "read: $readdb"
+echo
 
 if [[ "$#" -gt 4 ]]; then
 	echo "Haplotype dbs provided."
 	echo "Running Merqury in trio mode..."
-	hap1=$2
-	hap2=$3
-	asm1=$4
+	echo
+
+	hap1=`link $2`
+	hap2=`link $3`
+	asm1=`link $4`
+	echo "hap1: $hap1"
+	echo "hap2: $hap2"
+	echo "asm1: $asm1"
 	if [[ "$#" -eq 5 ]]; then
 		out=$5
 	else
-		asm2=$5
+		asm2=`link $5`
 		out=$6
+		echo "asm2: $asm2"
 	fi
+
 elif [[ "$#" -gt 2 ]]; then
 	echo "No haplotype dbs provided."
 	echo "Running Merqury in non-trio mode..."
-	asm1=$2
+	echo
+
+	asm1=`link $2`
+	echo "asm1: $asm1"
 	if [[ "$#" -eq 3 ]]; then
 		out=$3
 	else
-		asm2=$3
+		asm2=`link $3`
 		out=$4
+		echo "asm2: $asm2"
 	fi
 fi
+
+echo "out : $out"
+echo
 
 if [ -e $out ]; then
         echo "$out already exists. Provide a different name. (Are we missing the <out>?)"

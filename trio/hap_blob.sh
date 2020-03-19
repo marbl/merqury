@@ -7,6 +7,8 @@ if [[ $# -lt 4 ]]; then
 	exit -1
 fi
 
+source $MERQURY/util/util.sh
+
 hap1=$1
 hap2=$2
 asm1=$3
@@ -18,16 +20,23 @@ if [[ -z $hap1 || -z $hap2 ]]; then
 	exit -1
 fi
 
+hap1=`link $hap1`
+hap2=`link $hap2`
+
 if [[ -z $asm1 ]]; then
 	echo "No .fasta file given. Exit."
 	exit -1
 fi
+
+asm1=`link $asm1`
 
 if [[ -z $out ]]; then
 	echo "No asm2 given."
 	echo
 	asm2=""
 	out=$4
+else
+	asm2=`link $asm2`
 fi
 
 count=$out.hapmers.count

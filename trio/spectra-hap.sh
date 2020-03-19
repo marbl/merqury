@@ -8,7 +8,9 @@ if [[ $# -lt 5 ]]; then
 	exit -1
 fi
 
-read=$1
+source $MERQURY/util/util.sh
+
+read=`link $1`
 read_hap1=$2 # .meryl    Haplotype1 specific kmers with counts from reads
 read_hap2=$3 # .meryl    Haplotype2 specific kmers with counts from reads
 asm1_fa=$4   # .fasta    Haplotype1 assembly
@@ -23,6 +25,9 @@ if [ -z $read_hap1 ]; then
 	echo "No input provided. Exit."
 	exit -1
 fi
+
+read_hap1=`link $read_hap1`
+read_hap2=`link $read_hap2`
 
 k=`meryl print $read | head -n 2 | tail -n 1 | awk '{print length($1)}'`
 echo "Detected k-mer size $k"
@@ -44,6 +49,7 @@ echo
 
 for asm_fa in $asm1_fa $asm2_fa
 do
+    asm_fa=`link $asm_fa`
     asm=`echo $asm_fa | sed 's/.fasta$//g' | sed 's/.fa$//g' | sed 's/.fasta.gz$//g' | sed 's/.fa.gz$//g'`
     if ! [[ "$(ls -A $asm.meryl 2> /dev/null )" ]]; then
         echo "Generate meryl db for $asm_fa"
