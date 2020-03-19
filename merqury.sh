@@ -30,7 +30,7 @@ if [[ "$#" -gt 4 ]]; then
 elif [[ "$#" -gt 2 ]]; then
 	echo "No haplotype dbs provided."
 	echo "Running Merqury in non-trio mode..."
-	asm1=$3
+	asm1=$2
 	if [[ "$#" -eq 3 ]]; then
 		out=$3
 	else
@@ -50,7 +50,7 @@ echo "
 Get spectra-cn plots and QV stats"
 name=$out.spectra-cn
 log=logs/$name.log
-sh $MERQURY/eval/spectra-cn.sh $readdb $asm1 $asm2 $out > $log 2> $log
+$MERQURY/eval/spectra-cn.sh $readdb $asm1 $asm2 $out > $log 2> $log
 
 if [ -z $hap1 ]; then
 	exit 0
@@ -60,20 +60,20 @@ echo "
 Get blob plots"
 name=$out.blob
 log=logs/$name.log
-sh $MERQURY/trio/hap_blob.sh $hap1 $hap2 $asm1 $asm2 $out > $log 2> $log
+$MERQURY/trio/hap_blob.sh $hap1 $hap2 $asm1 $asm2 $out > $log 2> $log
 
 echo "
 Get haplotype specfic spectra-cn plots"
 name=$out.spectra-hap
 log=logs/$name.log
-sh $MERQURY/trio/spectra-hap.sh $readdb $hap1 $hap2 $asm1 $asm2 $out > $log 2> $log
+$MERQURY/trio/spectra-hap.sh $readdb $hap1 $hap2 $asm1 $asm2 $out > $log 2> $log
 
 echo "
 Get phase blocks"
 name=$out.phase-block1
 log=logs/$name.log
 
-sh $MERQURY/trio/phase_block.sh $asm1 $hap1 $hap2 $out.${asm1/.fasta/}  > $log 2> $log
+$MERQURY/trio/phase_block.sh $asm1 $hap1 $hap2 $out.${asm1/.fasta/}  > $log 2> $log
 echo
 
 if [ -z $asm2 ] ; then
@@ -81,18 +81,18 @@ if [ -z $asm2 ] ; then
 	name=$out.block_N
 	log=logs/$name.log
 
-	sh $MERQURY/trio/block_n_stats.sh $asm1 $out.${asm1/.fasta/}.*.phased_block.bed $out
+	$MERQURY/trio/block_n_stats.sh $asm1 $out.${asm1/.fasta/}.*.phased_block.bed $out
 
 	exit 0
 fi
 
 name=$out.phase-block2
 log=logs/$name.log
-sh $MERQURY/trio/phase_block.sh $asm2 $hap1 $hap2 $out.${asm2/.fasta/}  > $log 2> $log
+$MERQURY/trio/phase_block.sh $asm2 $hap1 $hap2 $out.${asm2/.fasta/}  > $log 2> $log
 
 echo "
 Get block N plots"
 name=$out.block_N
 log=logs/$name.log
 
-sh $MERQURY/trio/block_n_stats.sh $asm1 $out.${asm1/.fasta/}.*.phased_block.bed $asm2 $out.${asm2/.fasta/}.*.phased_block.bed $out
+$MERQURY/trio/block_n_stats.sh $asm1 $out.${asm1/.fasta/}.*.phased_block.bed $asm2 $out.${asm2/.fasta/}.*.phased_block.bed $out
