@@ -41,6 +41,8 @@ Add installation dir paths for `bedtools`, `samtools` and `igvtools` to your env
 
 ## Run
 
+* !! Merqury assumes all meryl dbs (dirs) are named with `.meryl`. !!
+
 On a single machine:
 ```
 ln -s $MERQURY/merqury.sh		# Link merqury
