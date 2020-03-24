@@ -38,11 +38,13 @@ if [ -s $name ]; then
 fi
 
 
-## Comment this line if R is properly installed ##
-echo "Load R"
-module load R					#
-#################################################
-echo
+has_module=$(check_module)
+if [[ $has_module -gt 0 ]]; then
+	echo "No modules available.."
+else
+	module load R
+fi
+
 
 asm1=`echo $asm1_fa | sed 's/.fasta$//g' | sed 's/.fa$//g' | sed 's/.fasta.gz$//g' | sed 's/.fa.gz$//g'`
 

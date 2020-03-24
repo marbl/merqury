@@ -67,7 +67,12 @@ done
 echo "
 Plot hap-mer blob plots"
 
-module load R
+has_module=$(check_module)
+if [[ $has_module -gt 0 ]]; then
+        echo "No modules available.."
+else
+	module load R
+fi
 
 echo "
 Rscript $MERQURY/plot/plot_blob.R -f $count -o $out.hapmers.blob"

@@ -9,3 +9,8 @@ function link()
         echo $db_name
 }
 
+function check_module()
+{
+	module -v 1> /dev/null 2> /dev/null
+	echo $?
+}

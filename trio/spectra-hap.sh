@@ -33,9 +33,14 @@ k=`meryl print $read | head -n 2 | tail -n 1 | awk '{print length($1)}'`
 echo "Detected k-mer size $k"
 
 ## Remove this line if R is properly installed ##
-echo "Load R"
-module load R                                   #
-#################################################
+source $MERQURY/util/util.sh
+
+has_module=$(check_module)
+if [[ $has_module -gt 0 ]]; then
+        echo "No modules available.."
+else
+	module load R
+fi
 
 read=${read/.meryl/}		  # all read counts
 read_hap1=${read_hap1/.meryl/}    # pat specific mers with read counts

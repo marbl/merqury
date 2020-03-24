@@ -48,7 +48,14 @@ echo "Count $hap1 and $hap2 hap-mers per block to $count"
 echo -e "Block\tRange\t$hap1\t$hap2\tSize" > $count
 awk -v hap1=$hap1 -v hap2=$hap2 '{ swi=$(NF-1); phase=$NF; {if ($4==hap1) { hap1_cnt=phase; hap2_cnt=swi; } else if ($4==hap2) { hap1_cnt=swi; hap2_cnt=phase; }} {print $4"\t"$1"_"$2"_"$3"\t"hap1_cnt"\t"hap2_cnt"\t"($3-$2)}}' $out.phased_block.bed >> $count
 
-module load R
+source $MERQURY/util/util.sh
+
+has_module=$(check_module)
+if [[ $has_module -gt 0 ]]; then
+        echo "No modules available.."
+else
+	module load R
+fi
 
 echo "
 Rscript $MERQURY/plot/plot_blob.R -f $count -o $out.phased_block.blob"

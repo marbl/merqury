@@ -31,9 +31,16 @@ else
     g_size=$4
 fi
 
-module load bedtools
-module load samtools
-module load R
+source $MERQURY/util/util.sh
+
+has_module=$(check_module)
+if [[ $has_module -gt 0 ]]; then
+        echo "No modules available.."
+else
+	module load bedtools
+	module load samtools
+	module load R
+fi
 
 for asm in $asm1 $asm2
 do

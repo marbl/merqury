@@ -112,10 +112,14 @@ meryl histogram shrd.inherited.meryl | awk -v kmer="shared" '{print kmer"\t"$1"\
 echo
 
 echo "# Plot $hist"
-## Comment this line if R is properly installed ##
-echo "Load R"					 #
-module load R                                    #
-##################################################
+source $MERQURY/util/util.sh
+
+has_module=$(check_module)
+if [[ $has_module -gt 0 ]]; then
+        echo "No modules available.."
+else
+	module load R
+fi
 echo
 
 Rscript $MERQURY/plot/plot_spectra_cn.R -f $hist -o ${hist/.hist/} -l cutoffs.txt
