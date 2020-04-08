@@ -62,8 +62,8 @@ asm2=`echo $asm2_fa | sed 's/.fasta.gz//g' | sed 's/.fa.gz//g' | sed 's/.fasta//
 
 asm="both"
 
-meryl union output $asm.meryl   $asm1.meryl   $asm2.meryl
-meryl union output $asm.0.meryl $asm1.0.meryl $asm2.0.meryl
+meryl union-sum output $asm.meryl   $asm1.meryl   $asm2.meryl
+meryl union-sum output $asm.0.meryl $asm1.0.meryl $asm2.0.meryl
 
 echo "# QV statistics for $asm"
 ASM_ONLY=`meryl statistics $asm.0.meryl  | head -n4 | tail -n1 | awk '{print $2}'`
