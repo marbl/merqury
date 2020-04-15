@@ -3,7 +3,7 @@
 echo "Usage: ./split.sh <input.fofn> [LINE_NUM]"
 echo -e "\t<input.fofn>: fastq.gz files we want to split by every 300 million lines."
 echo -e "\t<input.fofn>.LINE_NUM will be generated."
-echo -e "\t\tUse it for building meryl dbs"
+echo -e "\t\tUse it for building meryl dbs. pigz will use maximum of 8 processes by default."
 echo
 
 FOFN=$1
@@ -25,6 +25,9 @@ if [ -z $tid ]; then
 fi
 
 cpus=$SLURM_CPUS_PER_TASK
+if [[ -z $cpus ]]; then
+    cpus=8
+fi
 
 fq=`sed -n ${tid}p $FOFN`
 fq_prefix=`echo $fq | sed 's/.fastq.gz$//g' | sed 's/.fq.gz$//g' | sed 's/.fastq$//g' | sed 's/.fq$//g'`

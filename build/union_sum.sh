@@ -16,8 +16,6 @@ output_prefix=$3.k$k
 LEN=`wc -l $input_fofn | awk '{print $1}'`
 NUM_DBS_TO_JOIN=100	# Join every $NUM_DBS_TO_JOIN as intermediates, then merge at the end
 JOIN_IDX=0
-CPU=$SLURM_CPUS_PER_TASK
-MEM=$SLURM_MEM_PER_NODE
 
 echo "Set ulimit: ulimit -Sn 32000"
 ulimit -Sn 32000
@@ -44,8 +42,6 @@ do
 	if [ ! -d $output ]; then
 	    echo "
 	    meryl \
-	        threads=$CPU \
-	        memory=$((MEM/1024)) \
 	        k=$k \
 	        union-sum \
 	        output $output \
@@ -53,8 +49,6 @@ do
 	    "
 
 	    meryl \
-	        threads=$CPU \
-	        memory=$((MEM/1024)) \
 	        k=$k \
 	        union-sum \
 	        output $output \
@@ -97,8 +91,6 @@ echo "union-sum of $output_prefix.[ 1 - $JOIN_IDX ] :"
 if [ ! -d $output_prefix ]; then
     echo "
     meryl \
-        threads=$CPU \
-        memory=$((MEM/1024)) \
         k=$k \
         union-sum \
         output $output_prefix.meryl \
@@ -106,8 +98,6 @@ if [ ! -d $output_prefix ]; then
     "
 
     meryl \
-        threads=$CPU \
-        memory=$((MEM/1024)) \
         k=$k \
         union-sum \
         output $output_prefix.meryl \

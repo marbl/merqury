@@ -28,9 +28,19 @@ else
     line_num=$SLURM_ARRAY_TASK_ID
 fi
 
-#  Note: Provide memory in Gb unit. SLURM provides $SLURM_MEM_PER_NODE in Mb.
-#            Give extra 4Gb to avoid 'Bus Error' form running out of memory.
-mem=$(((SLURM_MEM_PER_NODE/1024)-4))
+if [[ ! -z $SLURM_CPUS_PER_TASK ]]; then
+	cpus="threads=$SLURM_CPUS_PER_TASK"
+fi
+
+# If SLURM_MEM_PER_NODE exist; give extra 4Gb
+# otherwise, let meryl determine
+if [[ ! -z $SLURM_MEM_PER_NODE ]]; then
+	# Note: Provide memory in Gb unit. SLURM provides $SLURM_MEM_PER_NODE in Mb.
+	# Give extra 4Gb to avoid 'Bus Error' form running out of memory.
+	mem=$(((SLURM_MEM_PER_NODE/1024)-4))
+	mem="memory=$mem"
+fi
+
 line_num=$(((offset * 1000) + $line_num))
 
 # Read in the input path
@@ -45,9 +55,9 @@ output=$name.$k.$line_num.meryl
 if [ ! -d $output ]; then
     # Run meryl count: Collect k-mer frequencies
     echo "
-    zcat $input | awk '{if (NR%2==1) {print $1} else {print substr($1,24)}}' | meryl k=$k threads=$SLURM_CPUS_PER_TASK memory=$mem count output $output -
+    zcat $input | awk '{if (NR%2==1) {print $1} else {print substr($1,24)}}' | meryl k=$k $cpus $mem count output $output -
     "
-    zcat $input | awk '{if (NR%2==1) {print $1} else {print substr($1,24)}}' | meryl k=$k threads=$SLURM_CPUS_PER_TASK memory=$mem count output $output -
+    zcat $input | awk '{if (NR%2==1) {print $1} else {print substr($1,24)}}' | meryl k=$k $cpus $mem count output $output -
 else
     echo "$output dir already exist. Nothing to do with $name."
 fi
