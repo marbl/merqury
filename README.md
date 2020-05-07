@@ -60,26 +60,59 @@ Usage: merqury.sh <read-db.meryl> [<mat.meryl> <pat.meryl>] <asm1.fasta> [asm2.f
 `< >` : required  
 `[ ]` : optional
 
+## Example
+
+Below is showing examples how to run Merqury using the prebuilt meryl dbs on a. thaliana F1 hybrid.
+The fasta files are the trio-binned assemblies from [Koren et al](https://doi.org/10.1038/nbt.4277).
+
+```shell
+### Download assemblies ###
+wget https://gembox.cbcb.umd.edu/triobinning/athal_COL.fasta
+wget https://gembox.cbcb.umd.edu/triobinning/athal_CVI.fasta
+
+### Download prebuilt meryl dbs ###
+# read.meryl of the F1 hybrid between COL-0 and CVI-0
+wget https://obj.umiacs.umd.edu/marbl_publications/merqury/athal/F1.k18.meryl.tar
+# hap-mers for COL-0 haplotype
+wget https://obj.umiacs.umd.edu/marbl_publications/merqury/athal/col0.hapmer.meryl.tar
+# hap-mers for CVI-0 haplotype
+wget https://obj.umiacs.umd.edu/marbl_publications/merqury/athal/cvi0.hapmer.meryl.tar
+
+# Untar
+tar -xf *.tar
+
+# Run merqury
+$MERQURY/merqury.sh F1.k18.meryl col0.hapmer.meryl cvi0.hapmer.meryl athal_COL.fasta athal_CVI.fasta test
+```
+
 
 ### 1. I have one assembly (pseudo-haplotype or mixed-haplotype)
 ```shell
 # I don't have the hap-mers
-./merqury.sh read-db.meryl asm1.fasta out_prefix
+$MERQURY/merqury.sh read-db.meryl asm1.fasta out_prefix
+# Using the example above
+$MERQURY/merqury.sh F1.k18.meryl athal_COL.fasta test-1
 
 # I have the hap-mers
-./merqury.sh read-db.meryl mat.meryl pat.meryl asm1.fasta out_prefix
+$MERQURY/merqury.sh read-db.meryl mat.meryl pat.meryl asm1.fasta out_prefix
+# Using the example above
+$MERQURY/merqury.sh F1.k18.meryl col0.hapmer.meryl cvi0.hapmer.meryl athal_COL.fasta test-1
 ```
 
 ### 2. I have two assemblies (diploid)
 ```shell
 # I don't have the hap-mers
-./merqury.sh read-db.meryl asm1.fasta asm2.fasta out_prefix
+$MERQURY/merqury.sh read-db.meryl asm1.fasta asm2.fasta out_prefix
+# Using the example above
+$MERQURY/merqury.sh F1.k18.meryl athal_COL.fasta athal_CVI.fasta test-2
 
 # I have the hap-mers
-./merqury.sh read-db.meryl mat.meryl pat.meryl asm1.fasta asm2.fasta out_prefix
+$MERQURY/merqury.sh read-db.meryl mat.meryl pat.meryl asm1.fasta asm2.fasta out_prefix
+# Using the example above
+$MERQURY/merqury.sh F1.k18.meryl col0.hapmer.meryl cvi0.hapmer.meryl athal_COL.fasta athal_CVI.fasta test-2
 ```
 
-* Note there is no need to run merqury per-assemblies again. Give two fasta files. Merqury generates stats for each and combined.
+* Note there is no need to run merqury per-assemblies. Give two fasta files, Merqury generates stats for each and combined.
 
 
 
