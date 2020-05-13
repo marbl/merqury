@@ -79,7 +79,10 @@ wget https://obj.umiacs.umd.edu/marbl_publications/merqury/athal/col0.hapmer.mer
 wget https://obj.umiacs.umd.edu/marbl_publications/merqury/athal/cvi0.hapmer.meryl.tar
 
 # Untar
-tar -xf *.tar
+for tar in *.tar
+do
+    tar -xf $tar
+done
 
 # Run merqury
 $MERQURY/merqury.sh F1.k18.meryl col0.hapmer.meryl cvi0.hapmer.meryl athal_COL.fasta athal_CVI.fasta test
