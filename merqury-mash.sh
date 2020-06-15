@@ -15,7 +15,15 @@ input_fofn=$3
 cpus=$4
 
 name=`echo $asm | sed 's/.fasta$//g' | sed 's/.fa$//g' | sed 's/.fasta.gz//g' | sed 's/.fa.gz//g'`
-module load mash
+
+source $MERQURY/util/util.sh
+
+has_module=$(check_module)
+if [[ $has_module -gt 0 ]]; then
+        echo "No modules available.."
+else
+        module load mash
+fi
 
 mash sketch -s 1000000 -k $k $asm
 mash screen -p $cpus $asm.msh `cat $input_fofn | tr '\n' ' '` > $name.msh.idy
