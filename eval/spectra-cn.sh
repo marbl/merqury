@@ -115,8 +115,8 @@ do
 
 	echo "# Plot $hist"
 	echo "\
-	$MERQURY/plot/plot_spectra_cn.R -f $hist -o $name.$asm.spectra-cn -z $hist_asm_only"
-	$MERQURY/plot/plot_spectra_cn.R -f $hist -o $name.$asm.spectra-cn -z $hist_asm_only
+	Rscript $MERQURY/plot/plot_spectra_cn.R -f $hist -o $name.$asm.spectra-cn -z $hist_asm_only"
+	Rscript $MERQURY/plot/plot_spectra_cn.R -f $hist -o $name.$asm.spectra-cn -z $hist_asm_only
 	echo
 
 	echo "# QV statistics"
@@ -177,8 +177,8 @@ if [[ "$asm2_fa" = "" ]]; then
 
 	echo "#	Plot $hist"
 	echo "\
-	$MERQURY/plot/plot_spectra_cn.R -f $hist -o $name.spectra-asm -z $hist_asm_dist_only"
-	$MERQURY/plot/plot_spectra_cn.R -f $hist -o $name.spectra-asm -z $hist_asm_dist_only
+	Rscript $MERQURY/plot/plot_spectra_cn.R -f $hist -o $name.spectra-asm -z $hist_asm_dist_only"
+	Rscript $MERQURY/plot/plot_spectra_cn.R -f $hist -o $name.spectra-asm -z $hist_asm_dist_only
 	echo
 
 	echo "# Clean up"

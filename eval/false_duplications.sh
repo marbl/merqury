@@ -16,5 +16,6 @@ thr_cp=`awk -v cutoff=$cutoff '$1==3 && $2<cutoff {sum+=$NF} END {print sum}' $h
 fou_cp=`awk -v cutoff=$cutoff '$1==4 && $2<cutoff {sum+=$NF} END {print sum}' $hist`
 mor_cp=`awk -v cutoff=$cutoff '$1==">4" && $2<cutoff {sum+=$NF} END {print sum}' $hist`
 DUPS_TOTAL=`echo "$one_cp $two_cp $thr_cp $fou_cp $mor_cp" | awk '{dup=$2+$3+$4+$5; all=dup+$1} END {print $1"\t"$2"\t"$3"\t"$4"\t"$5"\t"dup"\t"all"\t"(100*dup/all)}'`
-echo -e "$hist\t$DUPS_TOTAL"
+echo -e "hist\tcutoff\t1\t2\t3\t4\t>4\tdup(>1)\tall\tdup%"
+echo -e "$hist\t$cutoff\t$DUPS_TOTAL"
 
