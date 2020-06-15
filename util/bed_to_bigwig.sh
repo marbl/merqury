@@ -4,7 +4,7 @@ if [[ -z $1 ]]; then
     echo "Usage: ./bed_to_bigWig.sh <bed> <asm.fai> <convert_pipes>"
     echo -e "\t<bed>: ex. out.asm.mat.inherited.bed"
     echo -e "\t<asm.fai>: generate with samtools faidx"
-    echo -e "\t<convert_pipes>: convert `|` to `_` by default. Set to F if not wanted."
+    echo -e "\t<convert_pipes>: convert | to _ by default. Set to F if not wanted."
     exit 0
 fi
 
