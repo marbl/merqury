@@ -1,6 +1,6 @@
 #!/bin/sh
 
-if [[ "$#" -lt 2 ]]; then
+if [[ "$#" -lt 3 ]]; then
 	echo "Usage: ./asm_multiplicity.sh <asm.fasta> <asm.meryl> <out>"
 	echo -e "\t<asm.fasta>: assembly fasta file"
 	echo -e "\t<asm.meryl>: assembly meryl dir"
