@@ -72,16 +72,16 @@ wget https://gembox.cbcb.umd.edu/triobinning/athal_CVI.fasta
 
 ### Download prebuilt meryl dbs ###
 # read.meryl of the F1 hybrid between COL-0 and CVI-0
-wget https://obj.umiacs.umd.edu/marbl_publications/merqury/athal/F1.k18.meryl.tar
+wget https://obj.umiacs.umd.edu/marbl_publications/merqury/athal/a_thal.k18.meryl.tar.gz
 # hap-mers for COL-0 haplotype
-wget https://obj.umiacs.umd.edu/marbl_publications/merqury/athal/col0.hapmer.meryl.tar
+wget https://obj.umiacs.umd.edu/marbl_publications/merqury/athal/a_thal.col0.hapmer.meryl.tar.gz
 # hap-mers for CVI-0 haplotype
-wget https://obj.umiacs.umd.edu/marbl_publications/merqury/athal/cvi0.hapmer.meryl.tar
+wget https://obj.umiacs.umd.edu/marbl_publications/merqury/athal/a_thal.cvi0.hapmer.meryl.tar.gz
 
 # Untar
-for tar in *.tar
+for gz in *.tar.gz
 do
-    tar -xf $tar
+    tar -zxf $gz
 done
 
 # Run merqury
