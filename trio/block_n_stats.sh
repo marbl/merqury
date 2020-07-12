@@ -65,7 +65,7 @@ do
     if [[ $num_gaps -gt 0 ]]; then
         echo "# Found $num_gaps. Generating stats for both scaffolds and contigs."
         awk -v asm=$asm '{print "scaffold\t"asm"\t"$2}' $asm.fasta.fai | sort -nr -k3 - > $out.$asm.scaff.sizes
-        awk '{print $1"\t0\t"$2}' $asm.fasta.fai | bedtools subtract -a - -b $asm.gaps.bed | awk '{print "contig\t"asm"\t"($NF-$(NF-1))}' | sort -nr -k3 - > $out.$asm.contig.sizes
+        awk '{print $1"\t0\t"$2}' $asm.fasta.fai | bedtools subtract -a - -b $asm.gaps.bed | awk -v asm=$asm '{print "contig\t"asm"\t"($NF-$(NF-1))}' | sort -nr -k3 - > $out.$asm.contig.sizes
     else
         echo "# No gaps found. This is a contig set."
         awk -v asm=$asm '{print "contig\t"asm"\t"$2}' $asm.fasta.fai | sort -nr -k3 - > $out.$asm.contig.sizes
