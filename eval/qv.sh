@@ -50,6 +50,9 @@ do
         QV=`echo "$ASM_ONLY $TOTAL" | awk -v k=$k '{print (-10*log(1-(1-$1/$2)^(1/k))/log(10))}'`
         echo -e "$asm\t$ASM_ONLY\t$TOTAL\t$QV\t$ERROR" >> $name.qv
         echo
+
+        meryl-lookup -existence -sequence $asm_fa -mers $asm.0.meryl/ | \
+        awk -v k=$k '{print $1"\t"$NF"\t"$(NF-2)"\t"(-10*log(1-(1-$NF/$(NF-2))^(1/k))/log(10))"\t"(1-(1-$NF/$(NF-2))^(1/k))}' > $name.$asm.qv
 done
 
 if [[ "$asm2_fa" == "" ]]; then
