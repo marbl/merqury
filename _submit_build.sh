@@ -45,11 +45,11 @@ for i in $(seq 1 $LEN)
 do
 	fq=`sed -n ${i}p $input_fofn`
 	GB=`du -k $fq  | awk '{printf "%.0f", $1/1024/1024}'`
-	if [[ $GB -lt 12 ]]; then
-	    echo "$fq is $GB, less than 12GB. Skip splitting."
+	if [[ $GB -lt 15 ]]; then
+	    echo "$fq is $GB, less than 15GB. Skip splitting."
 	    echo $fq >> $input_fofn.$i
 	else
-	    echo "$fq is $GB, over 12GB. Will split and run meryl in parallel."
+	    echo "$fq is $GB, over 15GB. Will split and run meryl in parallel."
 	    echo "Split files will be in $input_fofn.$i"
 	    args="$input_fofn"
 	    split_arrs="$split_arrs$i,"
