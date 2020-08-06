@@ -127,6 +127,11 @@ do
         echo -e "$asm\t$ASM_ONLY\t$TOTAL\t$QV\t$ERROR" >> $name.qv
 	echo
 
+	echo "# Per seq QV statistics"
+	meryl-lookup -existence -sequence $asm_fa -mers $asm.0.meryl/ | \
+	awk -v k=$k '{print $1"\t"$NF"\t"$(NF-2)"\t"(-10*log(1-(1-$NF/$(NF-2))^(1/k))/log(10))"\t"(1-(1-$NF/$(NF-2))^(1/k))}' > $name.$asm.qv
+	echo
+
         echo "# k-mer completeness (recoveray rate) with solid k-mers for $asm with > $filt counts"
 	meryl intersect output $asm.solid.meryl $asm.meryl $read_solid
         TOTAL=`meryl statistics $read_solid | head -n3 | tail -n1 | awk '{print $2}'`
@@ -265,8 +270,8 @@ echo
 
 echo "# Plot $hist"
 echo "\
-$MERQURY/plot/plot_spectra_cn.R -f $hist -o $name.spectra-cn -z $hist_asm_only"
-$MERQURY/plot/plot_spectra_cn.R -f $hist -o $name.spectra-cn -z $hist_asm_only
+Rscript $MERQURY/plot/plot_spectra_cn.R -f $hist -o $name.spectra-cn -z $hist_asm_only"
+Rscript $MERQURY/plot/plot_spectra_cn.R -f $hist -o $name.spectra-cn -z $hist_asm_only
 echo
 
 echo "# QV"
@@ -317,7 +322,7 @@ else
 fi
 
 echo "Plot $hist"
-$MERQURY/plot/plot_spectra_cn.R -f $hist -o $name.spectra-asm -z $hist_asm_dist_only
+Rscript $MERQURY/plot/plot_spectra_cn.R -f $hist -o $name.spectra-asm -z $hist_asm_dist_only
 echo
 
 echo "Clean up"
