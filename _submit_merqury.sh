@@ -169,7 +169,7 @@ if [[ "$asm2" == "" ]] ; then
 fi
 
 cpus=12
-mem=24g
+mem=72g
 extra=""
 args="$asm2 $hap1 $hap2 $out.${asm2/.fasta/}"
 name=$out.phase-block.${asm2/.fasta/}
