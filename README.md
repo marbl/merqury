@@ -2,8 +2,8 @@
 
 ## Evaluate genome assemblies with k-mers and more
 
-Often, genome assembly projects have illumina whole genome sequencing reads available for the assembled individual.
-The k-mer spectrum of this read set can be used for independently evaluating assembly quality without the need of a high quality reference.
+Often, genome assembly projects have illumina whole genome sequencing reads available for the assembled individual.<br>
+The k-mer spectrum of this read set can be used for independently evaluating assembly quality without the need of a high quality reference.<br>
 Merqury provides a set of tools for this purpose.
 
 ## Dependency
@@ -17,7 +17,15 @@ Merqury provides a set of tools for this purpose.
 
 ## Installation
 
-### Get a working meryl in your PATH
+### Through Conda
+Thanks to @EdHarry, a conda recipe is now available: https://anaconda.org/bioconda/merqury <br>
+On a new conda enviroenment, run:
+```shell
+conda install -c bioconda merqury
+```
+
+### Direct installation 
+1. Get a working meryl in your PATH
 Download meryl release: https://github.com/marbl/meryl/releases/tag/v1.0
 
 If the binary doesn't work, download the source and compile:
@@ -28,14 +36,14 @@ export PATH=/path/to/meryl/…/bin:$PATH
 ```
 See if we get help message for `meryl`.
 
-### Add a path variable MERQURY
+2. Add a path variable MERQURY
 ```shell
 git clone https://github.com/marbl/merqury.git
 cd merqury
 export MERQURY=$PWD
 ```
-Add the “export” part to your environment (~/.bash_profile or ~/.profile).
-Add installation dir paths for `bedtools`, `samtools` and `igvtools` to your enviroenment.
+Add the “export” part to your environment (~/.bash_profile or ~/.profile).<br>
+Add installation dir paths for `bedtools`, `samtools` and `igvtools` to your enviroenment.<br>
 `source` it.
 
 
