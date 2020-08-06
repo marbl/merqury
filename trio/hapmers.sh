@@ -22,9 +22,11 @@ if [[ "$#" -lt 2 ]]; then
 	exit -1
 fi
 
-hap1_meryl=$1
-hap2_meryl=$2
-child_meryl=$3
+source $MERQURY/util/util.sh
+
+hap1_meryl=`link $1`
+hap2_meryl=`link $2`
+child_meryl=`link $3`
 
 hap1=${hap1_meryl%.meryl*}
 hap2=${hap2_meryl%.meryl*}
