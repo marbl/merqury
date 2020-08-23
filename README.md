@@ -19,7 +19,7 @@ Merqury provides a set of tools for this purpose.
 
 ### Through Conda
 Thanks to @EdHarry, a conda recipe is now available: https://anaconda.org/bioconda/merqury <br>
-On a new conda enviroenment, run:
+On a new conda environment, run:
 ```shell
 conda install -c bioconda merqury
 ```
@@ -43,7 +43,7 @@ cd merqury
 export MERQURY=$PWD
 ```
 Add the “export” part to your environment (~/.bash_profile or ~/.profile).<br>
-Add installation dir paths for `bedtools`, `samtools` and `igvtools` to your enviroenment.<br>
+Add installation dir paths for `bedtools`, `samtools` and `igvtools` to your environment.<br>
 `source` it.
 
 
