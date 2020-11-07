@@ -35,7 +35,7 @@ echo "# Maternal specific k-mers"
 if [[ -e $hap1.only.meryl ]]; then
 	echo "*** Found hap1.only.meryl. ***"
 else
-	sh $MERQURY/build/diff.sh $hap1_meryl $hap2_meryl $hap1.only
+	bash $MERQURY/build/diff.sh $hap1_meryl $hap2_meryl $hap1.only
 fi
 echo
 
@@ -43,7 +43,7 @@ echo "# Paternal specific k-mers"
 if [[ -e $hap2.only.meryl ]]; then
         echo "*** Found hap2.only.meryl. ***"
 else
-	sh $MERQURY/build/diff.sh $hap2_meryl $hap1_meryl $hap2.only
+	bash $MERQURY/build/diff.sh $hap2_meryl $hap1_meryl $hap2.only
 fi
 echo
 
@@ -51,7 +51,7 @@ echo "# Shared k-mers"
 if [[ -e shrd.meryl ]]; then
         echo "*** Found shrd.meryl. ***"
 else
-	sh $MERQURY/build/intersect.sh $hap1_meryl $hap2_meryl shrd
+	bash $MERQURY/build/intersect.sh $hap1_meryl $hap2_meryl shrd
 fi
 echo
 
@@ -66,8 +66,8 @@ echo "# $hap1 hap-mers"
 if [[ -e $hap1.hapmer.meryl ]]; then
         echo "*** Found $hap1.inherited.meryl. ***"
 else
-	sh $MERQURY/build/intersect.sh $child_meryl $hap1.only.meryl $hap1.inherited
-	sh $MERQURY/build/filt.sh $hap1.inherited.meryl $hap1.hapmer
+	bash $MERQURY/build/intersect.sh $child_meryl $hap1.only.meryl $hap1.inherited
+	bash $MERQURY/build/filt.sh $hap1.inherited.meryl $hap1.hapmer
 fi
 echo
 
@@ -77,8 +77,8 @@ echo "# $hap2 hap-mers"
 if [[ -e $hap2.hapmer.meryl ]]; then
         echo "*** Found hap2.inherited.meryl. ***"
 else
-	sh $MERQURY/build/intersect.sh $child_meryl $hap2.only.meryl $hap2.inherited
-	sh $MERQURY/build/filt.sh $hap2.inherited.meryl $hap2.hapmer
+	bash $MERQURY/build/intersect.sh $child_meryl $hap2.only.meryl $hap2.inherited
+	bash $MERQURY/build/filt.sh $hap2.inherited.meryl $hap2.hapmer
 fi
 echo
 
@@ -88,8 +88,8 @@ echo "# Shared k-mers"
 if [[ -e shrd.filt.meryl ]]; then
         echo "*** Found shrd.inherited.meryl. ***"
 else
-	sh $MERQURY/build/intersect.sh $child_meryl shrd.meryl shrd.inherited
-	sh $MERQURY/build/filt.sh shrd.inherited.meryl shrd.filt
+	bash $MERQURY/build/intersect.sh $child_meryl shrd.meryl shrd.inherited
+	bash $MERQURY/build/filt.sh shrd.inherited.meryl shrd.filt
 fi
 echo
 

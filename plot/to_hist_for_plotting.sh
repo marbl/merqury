@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 if [[ "$#" -lt 2 ]]; then
   echo "Usage: sh to_hist_for_plotting.sh db1.meryl name1 [ db2.meryl name2 ... ]"
