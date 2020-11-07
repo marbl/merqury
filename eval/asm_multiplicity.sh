@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 if [[ "$#" -lt 3 ]]; then
 	echo "Usage: ./asm_multiplicity.sh <asm.fasta> <asm.meryl> <out>"

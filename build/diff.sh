@@ -22,6 +22,6 @@ if [ ! -d ${db1}_not_${db2}.meryl ]; then
 fi
 
 echo "\
-sh $MERQURY/build/filt.sh ${db1}_not_${db2}.meryl $out"
-sh $MERQURY/build/filt.sh ${db1}_not_${db2}.meryl $out
+bash $MERQURY/build/filt.sh ${db1}_not_${db2}.meryl $out"
+bash $MERQURY/build/filt.sh ${db1}_not_${db2}.meryl $out
 
