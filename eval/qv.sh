@@ -12,7 +12,6 @@ if [[ "$#" -lt 3 ]]; then
 	echo "   Run spectra_cn.sh for full copy number analysis."
 	exit 0
 fi
-
 source $MERQURY/util/util.sh
 
 read_db=`link $1`
@@ -57,7 +56,7 @@ done
 
 if [[ "$asm2_fa" == "" ]]; then
 	echo -e "No asm2 found.\nDone!"
-	rm -r $asm1.0.meryl $asm1.meryl
+	rm -r $asm1.0.meryl
 	exit 0
 fi
 
@@ -76,6 +75,6 @@ QV=`echo "$ASM_ONLY $TOTAL" | awk -v k=$k '{print (-10*log(1-(1-$1/$2)^(1/k))/lo
 echo -e "$asm\t$ASM_ONLY\t$TOTAL\t$QV\t$ERROR" >> $name.qv
 echo
 
-rm -r $asm1.0.meryl $asm1.meryl $asm2.0.meryl $asm2.meryl $asm.0.meryl $asm.meryl
+rm -r $asm1.0.meryl $asm2.0.meryl $asm.0.meryl
 echo "Done!"
 
