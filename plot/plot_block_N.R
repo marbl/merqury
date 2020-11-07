@@ -27,7 +27,14 @@ fancy_scientific <- function(d) {
 }
 
 save_plot <- function(name, type, stats, outformat, h, w) {
-  ggsave(file = paste(name, type, stats, outformat, sep = "."), height = h, width = w)
+  #ggsave(file = paste(name, type, stats, outformat, sep = "."), height = h, width = w)
+  
+  if (outformat == "pdf") {
+    ggsave(file = paste(name, type, stats, outformat, sep = "."), height = h, width = w, units = "in", device = cairo_pdf)
+  } else {
+    ggsave(file = paste(name, type, stats, outformat, sep = "."), height = h, width = w, dpi=300, type = "cairo")
+  }
+
 }
 
 attach_n <- function(dat, gsize=0) {
