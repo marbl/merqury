@@ -22,8 +22,7 @@ fi
 
 echo "
 # Collect k-mer multiplicity in reads"
-# Adjust memory accordingly
-meryl-lookup -dump -memory 68 -sequence $asm_fa -mers $read | awk '$4=="T"' | java -jar -Xmx1g $MERQURY/util/merylDumpToWig.jar - > $out.read.wig
+meryl-lookup -dump -sequence $asm_fa -mers $read -labels ${read/.meryl} | awk '$4=="T"' | java -jar -Xmx1g $MERQURY/util/merylDumpToWig.jar - > $out.read.wig
 
 echo "
 # Convert to bigwig"

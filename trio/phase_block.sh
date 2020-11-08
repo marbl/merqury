@@ -19,7 +19,6 @@ has_module=$(check_module)
 if [[ $has_module -gt 0 ]]; then
         echo "No modules available.."
 else
-        module load bedtools
         module load samtools
 fi
 
@@ -39,34 +38,34 @@ if [ ! -e $scaff.fasta.fai ]; then
 	samtools faidx $scaff.fasta
 fi
 
+echo "
+Generate haplotype marker sites bed
+"
 if [ ! -s $out.sort.bed ]; then
-	echo "
-	Generate haplotype marker sites bed"
-	for hap in $hap1 $hap2
-	do
-		hap=${hap/.meryl/}
-		echo "
-		-- $hap"
-		hap_short=${hap%.*}
-		if [ ! -s $out.$hap.bed ]; then
-			meryl-lookup -dump -memory 4 -sequence $scaff.fasta -mers $hap.meryl | awk -v hap=$hap_short -v k=$k '$(NF-4)=="T" {print $1"\t"$(NF-5)"\t"($(NF-5)+k)"\t"hap}' > $out.$hap.bed
-		fi
-		cat $out.$hap.bed >> $out.bed
-
-		if [ ! -s $out.$hap.tdf ]; then
-			igvtools count $out.$hap.bed $out.$hap.tdf $scaff.fasta.fai
-		fi
-	done
-
-	echo "
-	Sort $out.bed"
-	bedtools sort -i $out.bed > $out.sort.bed
+  meryl-lookup -dump -sequence $scaff.fasta -mers $hap1 $hap2 -labels ${hap1/.meryl/} ${hap2/.meryl/} |\
+    awk -v k=$k -F "\t" '$4=="T" {print $1"\t"$3"\t"($3+k)"\t"$NF}' |\
+    awk '{print $1"\t"$(NF-2)"\t"$(NF-1)"\t"$NF}' > $out.sort.bed
+else
+  echo "*** Found $out.sort.bed. Skipping this step. ***"
 fi
 
-#$MERQURY/plot/plot_block.sh <in.sort.bed> <out> <num_switch> <short_range> [include_gaps] 
+for hap in $hap1 $hap2
+do
+  hap=${hap/.meryl}
+  echo "
+  -- Generating $out.$hap.tdf"
+  if [ ! -s $out.$hap.tdf ]; then
+    grep $hap $out.sort.bed > $out.$hap.bed
+    igvtools count $out.$hap.bed $out.$hap.tdf $scaff.fasta.fai
+  else
+    echo "*** Found $out.$hap.tdf. Skipping this step. ***"
+  fi
+done
+
+echo ""
+
 echo "
 $MERQURY/trio/switch_error.sh $out.sort.bed $out 100 20000"
 $MERQURY/trio/switch_error.sh $out.sort.bed $out 100 20000
 echo
-
 

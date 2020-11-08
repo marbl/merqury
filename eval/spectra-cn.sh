@@ -148,7 +148,7 @@ do
   fi
 
   if [[ ! -e "${asm}_only.tdf" ]]; then
-    meryl-lookup -dump -memory 6 -sequence $asm_fa -mers ${asm}.0.meryl | awk '$(NF-4)=="T" {print $1"\t"$(NF-5)"\t"($(NF-5)+21)}' > ${asm}_only.bed
+    meryl-lookup -dump -sequence $asm_fa -mers ${asm}.0.meryl -labels ${asm}_only | awk -v k=$k -F "\t" '$4=="T" {print $1"\t"$3"\t"($3+k)}' > ${asm}_only.bed
     igvtools count ${asm}_only.bed ${asm}_only.tdf $asm_fa.fai
     echo "${asm}_only.tdf generated."
   else
