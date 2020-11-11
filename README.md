@@ -24,6 +24,16 @@ On a new conda environment, run:
 conda install -c bioconda merqury
 ```
 
+Or, if you have a different version of jdk installed or want to have a separate conda environnment for merqury:
+```shell
+conda create -n merqury -c bioconda -c conda-forge merqury openjdk=11
+```
+
+You will then need to activate the merqury environment before using it with:
+```shell
+conda activate merqury
+```
+
 ### Direct installation 
 1. Get a working meryl in your PATH
 Download meryl release: https://github.com/marbl/meryl/releases/tag/v1.0
