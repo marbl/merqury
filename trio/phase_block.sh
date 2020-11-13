@@ -15,13 +15,6 @@ hap1=`link $2`
 hap2=`link $3`
 out=$4
 
-has_module=$(check_module)
-if [[ $has_module -gt 0 ]]; then
-        echo "No modules available.."
-else
-        module load samtools
-fi
-
 k=`meryl print $hap1 | head -n 2 | tail -n 1 | awk '{print length($1)}'`
 echo "Detected k-mer size: $k"
 
