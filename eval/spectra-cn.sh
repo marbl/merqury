@@ -49,13 +49,7 @@ fi
 asm1=`echo $asm1_fa | sed 's/.fa$//g' | sed 's/.fasta$//g' | sed 's/.fasta.gz$//g' | sed 's/.fa.gz$//g'`
 
 echo "# Get solid k-mers"
-
-if [ ! -s ${read/.meryl/.filt} ]; then
-  $MERQURY/build/filt.sh $read
-else
-  echo "*** Found ${read/.meryl/.filt}. ***"
-  echo
-fi
+$MERQURY/build/filt.sh $read
 filt=`cat ${read/.meryl/.filt}`
 read_solid=${read/.meryl/}.gt$filt.meryl
 
@@ -129,14 +123,14 @@ do
 
   echo "# Per seq QV statistics"
   meryl-lookup -existence -sequence $asm_fa -mers $asm.0.meryl/ | \
-  awk -v k=$k '{print $1"\t"$NF"\t"$(NF-2)"\t"(-10*log(1-(1-$NF/$(NF-2))^(1/k))/log(10))"\t"(1-(1-$NF/$(NF-2))^(1/k))}' > $name.$asm.qv
+  awk -v k=$k '{print $1"\t"$4"\t"$2"\t"(-10*log(1-(1-$4/$2)^(1/k))/log(10))"\t"(1-(1-$4/$2)^(1/k))}' > $name.$asm.qv
   echo
 
   echo "# k-mer completeness (recoveray rate) with solid k-mers for $asm with > $filt counts"
   meryl intersect output $asm.solid.meryl $asm.meryl $read_solid
   TOTAL=`meryl statistics $read_solid | head -n3 | tail -n1 | awk '{print $2}'`
   ASM=`meryl statistics $asm.solid.meryl | head -n3 | tail -n1 | awk '{print $2}'`
-  echo -e "${asm}\tall\t${ASM}\t${TOTAL}" | awk '{print $0"\t"((100*$3)/$4)}' >> completeness.stats
+  echo -e "${asm}\tall\t${ASM}\t${TOTAL}" | awk '{print $0"\t"((100*$3)/$4)}' >> $name.completeness.stats
   rm -r $asm.solid.meryl
   echo
 
@@ -148,7 +142,7 @@ do
   fi
 
   if [[ ! -e "${asm}_only.tdf" ]]; then
-    meryl-lookup -dump -sequence $asm_fa -mers ${asm}.0.meryl -labels ${asm}_only | awk -v k=$k -F "\t" '$4=="T" {print $1"\t"$3"\t"($3+k)}' > ${asm}_only.bed
+    meryl-lookup -dump -sequence $asm_fa -mers ${asm}.0.meryl | awk -v k=$k -F "\t" '$4=="T" {print $1"\t"$3"\t"($3+k)}' > ${asm}_only.bed
     igvtools count ${asm}_only.bed ${asm}_only.tdf $asm_fa.fai
     echo "${asm}_only.tdf generated."
   else
@@ -203,7 +197,7 @@ echo "# k-mer completeness (recovery rate) with solid k-mers for both assemblies
 meryl intersect output ${asm1}_${asm2}.solid.meryl ${asm1}_${asm2}_union.meryl $read_solid
 TOTAL=`meryl statistics $read_solid | head -n3 | tail -n1 | awk '{print $2}'`
 ASM=`meryl statistics ${asm1}_${asm2}.solid.meryl | head -n3 | tail -n1 | awk '{print $2}'`
-echo -e "both\tall\t${ASM}\t${TOTAL}" | awk '{print $0"\t"((100*$3)/$4)}' >> completeness.stats
+echo -e "both\tall\t${ASM}\t${TOTAL}" | awk '{print $0"\t"((100*$3)/$4)}' >> $name.completeness.stats
 rm -r ${asm1}_${asm2}.solid.meryl $read_solid
 echo
 

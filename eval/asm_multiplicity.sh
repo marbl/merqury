@@ -23,7 +23,7 @@ fi
 
 echo "
 # Collect copy numbers in assembly"
-meryl-lookup -dump -sequence $asm_fa -mers $asm -labels ${asm/.meryl} | awk '$4=="T"' | java -jar -Xmx1g $MERQURY/util/merylDumpToWig.jar - > $out.copies.wig
+meryl-lookup -dump -sequence $asm_fa -mers $asm | awk '$4=="T"' | java -jar -Xmx1g $MERQURY/util/merylDumpToWig.jar - > $out.copies.wig
 
 echo "
 # Convert to bigwig"
