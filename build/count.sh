@@ -16,24 +16,24 @@ input_fofn=$2
 
 
 if [ -z $3 ]; then
-    offset=0
+  offset=0
 else
-    offset=$3
+  offset=$3
 fi
 
 if [ ! -z $4 ]; then
-    line_num=$4
+  line_num=$4
 else
-    line_num=$SLURM_ARRAY_TASK_ID
+  line_num=$SLURM_ARRAY_TASK_ID
 fi
 
 #  Note: Provide memory in Gb unit. SLURM provides $SLURM_MEM_PER_NODE in Mb.
 #            Give extra 4Gb to avoid 'Bus Error' form running out of memory.
 if [[ -z $SLURM_MEM_PER_NODE ]]; then
-	mem=32
+  mem=32
 else
-	mem=$(((SLURM_MEM_PER_NODE/1024)-4))
-fi
+mem=$(((SLURM_MEM_PER_NODE/1024)-4))
+  fi
 line_num=$(((offset * 1000) + $line_num))
 
 # Read in the input path
@@ -46,13 +46,13 @@ name=`basename $name`
 output=$name.$k.$line_num.meryl
 
 if [ ! -d $output ]; then
-    # Run meryl count: Collect k-mer frequencies
-    echo "
-    meryl k=$k memory=$mem count $input output $output
-    "
-    meryl k=$k memory=$mem count $input output $output
+# Run meryl count: Collect k-mer frequencies
+echo "
+meryl k=$k memory=$mem count $input output $output
+"
+meryl k=$k memory=$mem count $input output $output
 else
-    echo "$output dir already exist. Nothing to do with $name."
+echo "$output dir already exist. Nothing to do with $name."
 fi
 
 
