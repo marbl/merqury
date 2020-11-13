@@ -2,10 +2,11 @@
 
 if [[ "$#" -lt 2 ]]; then
 	echo
-	echo "Usage: hapmers.sh <hap1.meryl> <hap2.meryl> [child.meryl]"
+	echo "Usage: hapmers.sh <hap1.meryl> <hap2.meryl> [child.meryl] [-no-filt]"
 	echo -e "\t<hap1.meryl>\tHaplotype1 k-mers (all, ex. maternal)"
 	echo -e "\t<hap2.meryl>\tHaplotype2 k-mers (all, ex. paternal)"
 	echo -e "\t[child.meryl]\tChilds' k-mers (all, from WGS reads)"
+  echo -e "\t-no-filt\tDo not filter parental kmers.\n\t\tUse only if parental dbs aren't from regular sequencing dbs"
 	echo
 	echo -e "\tOutput"
 	echo -e "\t\thap1.only.meryl\tHaplotype1 specific k-mers (parental)"
@@ -26,7 +27,12 @@ source $MERQURY/util/util.sh
 
 hap1_meryl=`link $1`
 hap2_meryl=`link $2`
-child_meryl=`link $3`
+if ! [[ "$3" == "-no-filt" ]]; then
+  child_meryl=`link $3`
+fi
+if [[ "${@: -1}" == "-no-filt" ]]; then
+  nofilt="-no-filt"
+fi
 
 hap1=${hap1_meryl%.meryl*}
 hap2=${hap2_meryl%.meryl*}
@@ -35,7 +41,7 @@ echo "# Maternal specific k-mers"
 if [[ -e $hap1.only.meryl ]]; then
 	echo "*** Found hap1.only.meryl. ***"
 else
-	bash $MERQURY/build/diff.sh $hap1_meryl $hap2_meryl $hap1.only
+	bash $MERQURY/build/diff.sh $hap1_meryl $hap2_meryl $hap1.only $nofilt
 fi
 echo
 
@@ -43,7 +49,7 @@ echo "# Paternal specific k-mers"
 if [[ -e $hap2.only.meryl ]]; then
         echo "*** Found hap2.only.meryl. ***"
 else
-	bash $MERQURY/build/diff.sh $hap2_meryl $hap1_meryl $hap2.only
+	bash $MERQURY/build/diff.sh $hap2_meryl $hap1_meryl $hap2.only $nofilt
 fi
 echo
 

@@ -42,16 +42,16 @@ do
 
 	meryl difference output $asm.0.meryl $asm.meryl $read_db
 
-        echo "# QV statistics for $asm"
-        ASM_ONLY=`meryl statistics $asm.0.meryl  | head -n4 | tail -n1 | awk '{print $2}'`
-        TOTAL=`meryl statistics $asm.meryl  | head -n4 | tail -n1 | awk '{print $2}'`
-        ERROR=`echo "$ASM_ONLY $TOTAL" | awk -v k=$k '{print (1-(1-$1/$2)^(1/k))}'`
-        QV=`echo "$ASM_ONLY $TOTAL" | awk -v k=$k '{print (-10*log(1-(1-$1/$2)^(1/k))/log(10))}'`
-        echo -e "$asm\t$ASM_ONLY\t$TOTAL\t$QV\t$ERROR" >> $name.qv
-        echo
+  echo "# QV statistics for $asm"
+  ASM_ONLY=`meryl statistics $asm.0.meryl  | head -n4 | tail -n1 | awk '{print $2}'`
+  TOTAL=`meryl statistics $asm.meryl  | head -n4 | tail -n1 | awk '{print $2}'`
+  ERROR=`echo "$ASM_ONLY $TOTAL" | awk -v k=$k '{print (1-(1-$1/$2)^(1/k))}'`
+  QV=`echo "$ASM_ONLY $TOTAL" | awk -v k=$k '{print (-10*log(1-(1-$1/$2)^(1/k))/log(10))}'`
+  echo -e "$asm\t$ASM_ONLY\t$TOTAL\t$QV\t$ERROR" >> $name.qv
+  echo
 
-        meryl-lookup -existence -sequence $asm_fa -mers $asm.0.meryl/ | \
-        awk -v k=$k '{print $1"\t"$NF"\t"$(NF-2)"\t"(-10*log(1-(1-$NF/$(NF-2))^(1/k))/log(10))"\t"(1-(1-$NF/$(NF-2))^(1/k))}' > $name.$asm.qv
+  meryl-lookup -existence -sequence $asm_fa -mers $asm.0.meryl/ | \
+    awk -v k=$k '{print $1"\t"$4"\t"$2"\t"(-10*log(1-(1-$4/$2)^(1/k))/log(10))"\t"(1-(1-$4/$2)^(1/k))}' > $name.$asm.qv
 done
 
 if [[ "$asm2_fa" == "" ]]; then

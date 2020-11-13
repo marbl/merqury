@@ -47,21 +47,11 @@ do
 	echo "
 	Start processing $name"
 
-	for hap in $hap1 $hap2
-	do
-		hap_name=${hap/.meryl}
-		if [ -s $name.$hap_name.count ]; then
-			echo "Found $name.$hap_name.count"
-		else
-			echo -e "\n\n--- Count k-mers in $hap_name ---
-			meryl-lookup -existence -sequence $asm -mers $hap > $name.$hap_name.count"
-			meryl-lookup -existence -sequence $asm -mers $hap > $name.$hap_name.count
-		fi
-	done
-
-	awk -v asm=$name '{print asm"\t"$1"\t"$NF}' $name.${hap1/.meryl/}.count > $asm.tmp
-	awk '{print $NF"\t"$(NF-2)}' $name.${hap2/.meryl/}.count | paste $asm.tmp - >> $count
-	rm $asm.tmp
+  echo -e "\n\n--- Lookup k-mers in $hap1 and $hap2 ---"
+  echo "
+  meryl-lookup -existence -sequence $asm -mers $hap1 $hap2 -labels ${hap1/.meryl} ${hap2/.meryl} | awk -v asm=$name '...' >> $count"
+  meryl-lookup -existence -sequence $asm -mers $hap1 $hap2 -labels ${hap1/.meryl} ${hap2/.meryl} |\
+    awk -v asm=$name '{print asm"\t"$1"\t"$4"\t"$6"\t"$2}' >> $count
 done
 
 echo "

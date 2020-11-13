@@ -39,5 +39,5 @@ fi
 
 echo "QV per sequences"
 meryl-lookup -existence -sequence $seq -mers $seq_name.0.meryl/ | \
-   awk -v k=$k '{print $1"\t"$NF"\t"$(NF-2)"\t"(-10*log(1-(1-$NF/$(NF-2))^(1/k))/log(10))"\t"(1-(1-$NF/$(NF-2))^(1/k))}' > $name.qv
+   awk -v k=$k '{print $1"\t"$4"\t"$2"\t"(-10*log(1-(1-$4/$2)^(1/k))/log(10))"\t"(1-(1-$4/$2)^(1/k))}' > $name.qv
 

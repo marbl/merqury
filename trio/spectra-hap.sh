@@ -72,7 +72,7 @@ do
 	meryl intersect output $read_hap.$asm.meryl $read_hap.meryl $asm.meryl
 	TOTAL=`meryl statistics $read_hap.meryl | head -n3 | tail -n1 | awk '{print $2}'`
 	ASM=`meryl statistics $read_hap.$asm.meryl | head -n3 | tail -n1 | awk '{print $2}'`
-	echo -e "${asm}\t${read_hap}\t${ASM}\t${TOTAL}" | awk '{print $0"\t"((100*$3)/$4)}' >> completeness.stats
+	echo -e "${asm}\t${read_hap}\t${ASM}\t${TOTAL}" | awk '{print $0"\t"((100*$3)/$4)}' >> $name.completeness.stats
 	echo
 
         if [ -s $name.$asm.$read_hap.$cn_hist ]; then
@@ -131,7 +131,7 @@ do
 	meryl intersect output $read_hap.both.meryl both.meryl $read_hap.meryl
         TOTAL=`meryl statistics $read_hap.meryl | head -n3 | tail -n1 | awk '{print $2}'`
         ASM=`meryl statistics $read_hap.both.meryl | head -n3 | tail -n1 | awk '{print $2}'`
-        echo -e "both\t${read_hap}\t${ASM}\t${TOTAL}" | awk '{print $0"\t"((100*$3)/$4)}' >> completeness.stats
+        echo -e "both\t${read_hap}\t${ASM}\t${TOTAL}" | awk '{print $0"\t"((100*$3)/$4)}' >> $name.completeness.stats
 	rm -r $read_hap.both.meryl
 done
 rm -r both.meryl
