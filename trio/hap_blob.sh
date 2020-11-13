@@ -47,10 +47,10 @@ do
 	echo "
 	Start processing $name"
 
-  echo -e "\n\n--- Lookup k-mers in $hap1 and $hap2 ---
-  meryl-lookup -existence -sequence $asm -mers $hap1 $hap2 -labels ${hap1/.meryl} ${$hap2/.meryl} |
-    awk -v asm=$name '...' > $count"
-  meryl-lookup -existence -sequence $asm -mers $hap1 $hap2 -labels ${hap1/.meryl} ${$hap2/.meryl} |\
+  echo -e "\n\n--- Lookup k-mers in $hap1 and $hap2 ---"
+  echo "
+  meryl-lookup -existence -sequence $asm -mers $hap1 $hap2 -labels ${hap1/.meryl} ${hap2/.meryl} | awk -v asm=$name '...' > $count"
+  meryl-lookup -existence -sequence $asm -mers $hap1 $hap2 -labels ${hap1/.meryl} ${hap2/.meryl} |\
     awk -v asm=$name '$4=="T" {print name"\t"$1"\t"$4"\t"$6"\t"$2}' >> $count
 done
 
