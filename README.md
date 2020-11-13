@@ -17,7 +17,9 @@ Merqury provides a set of tools for this purpose.
 
 ## Installation
 
-### Through Conda
+### Stable Release
+
+#### Through Conda
 Thanks to @EdHarry, a conda recipe is now available: https://anaconda.org/bioconda/merqury <br>
 On a new conda environment, run:
 ```shell
@@ -34,8 +36,10 @@ You will then need to activate the merqury environment before using it with:
 conda activate merqury
 ```
 
-### Direct installation 
-1. Get a working meryl in your PATH
+#### Direct installation 
+1. Get a working [Meryl](https://github.com/marbl/meryl) in your PATH
+
+
 Download meryl release: https://github.com/marbl/meryl/releases/tag/v1.0
 
 If the binary doesn't work, download the source and compile:
@@ -46,16 +50,34 @@ export PATH=/path/to/meryl/…/bin:$PATH
 ```
 See if we get help message for `meryl`.
 
-2. Add a path variable MERQURY
+2. Download the release version and set env variable `$MERQURY`
 ```shell
-git clone https://github.com/marbl/merqury.git
-cd merqury
+wget https://github.com/marbl/merqury/archive/v1.1.tar.gz
+tar -zxvf v1.1.tar.gz
+cd merqury-1.1
 export MERQURY=$PWD
 ```
 Add the “export” part to your environment (~/.bash_profile or ~/.profile).<br>
 Add installation dir paths for `bedtools`, `samtools` and `igvtools` to your environment.<br>
 `source` it.
 
+### Experimental version
+1. Get the latest [Meryl](https://github.com/marbl/meryl)
+
+
+Meryl has much improved in multi-threading and memory management. This will help getting a little speed up, especially for the meryl counting and set operations used in Merqury.
+```shell
+git clone https://github.com/marbl/meryl.git
+cd meryl
+git reset --hard 6d396a0228f12c7657956c346e761b70ed596f5a
+```
+
+2. Clone this repository and set env variable MERQURY
+```shell
+git clone https://github.com/marbl/merqury.git
+cd merqury
+export MERQURY=$PWD
+```
 
 ## Run
 
