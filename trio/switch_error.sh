@@ -29,7 +29,7 @@ fi
 echo
 
 SWITCH_ERR=`awk -v swi=0 -v tot=0 '{swi+=$(NF-1); tot+=$NF} END { print swi"\t"tot"\t"((100.0*swi)/tot)"%" }' $out.phased_block.bed`
-echo "$out switch error rate (%) (Num. switches / Total markers found): $SWITCH_ERR" > switches.txt
+echo "$out switch error rate (%) (Num. switches / Total markers found): $SWITCH_ERR" > $out.switches.txt
 
 
 echo "
