@@ -30,10 +30,10 @@ fi
 #  Note: Provide memory in Gb unit. SLURM provides $SLURM_MEM_PER_NODE in Mb.
 #            Give extra 4Gb to avoid 'Bus Error' form running out of memory.
 if [[ -z $SLURM_MEM_PER_NODE ]]; then
-  mem=32
+  mem=28
 else
-mem=$(((SLURM_MEM_PER_NODE/1024)-4))
-  fi
+  mem=$((SLURM_MEM_PER_NODE/1024))
+fi
 line_num=$(((offset * 1000) + $line_num))
 
 # Read in the input path
@@ -43,7 +43,7 @@ input=`sed -n ${line_num}p $input_fofn`
 name=`echo $input | sed 's/.fastq.gz$//g' | sed 's/.fq.gz$//g' | sed 's/.fasta$//g' | sed 's/.fa$//g' | sed 's/.fasta.gz$//g' | sed 's/.fa.gz$//g'`
 name=`basename $name`
 
-output=$name.$k.$line_num.meryl
+output=$name.k$k.$line_num.meryl
 
 if [ ! -d $output ]; then
 # Run meryl count: Collect k-mer frequencies
