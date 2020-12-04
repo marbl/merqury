@@ -22,7 +22,7 @@ child_meryl=$3
 
 mkdir -p logs
 
-cpus=48 # Max: 64 per each .meryl/ file writer
+cpus=16 # Max: 64 per each .meryl/ file writer
 mem=24g
 partition=quick
 walltime=3:00:00
