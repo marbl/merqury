@@ -14,7 +14,7 @@ args <- parser$parse_args()
 
 blob_plot <- function(dat=NULL, out, w=6.5, h=6, pdf=FALSE) {
 
-  dat=read.table(dat, header=TRUE)
+  dat=read.table(dat, header=TRUE, comment.char="")
 
   max_total=max(max(dat[,3]), max(dat[,4])) * 1.01
   col_lab=names(dat)[1]
