@@ -13,27 +13,38 @@ fai=$2
 convert=$3
 
 module load bedtools
-module load ucsc/396
+module load ucsc/406
 
 bg=${bed/.bed/.bg}
+sizes=${fai/.fai/.sizes}
+cat $fai | cut -f1-2 > $sizes
 
 if [[ "$convert" = "F" ]]; then
-    echo "# keep pipes"
-    sizes=${fai/.fai/.sizes}
-    cat $fai | cut -f1-2 > $sizes
-    cat $bed | bedtools genomecov -bg -g $sizes -i - > $bg
+  echo "# Convert to bigBed"
+  cat $bed | bedtools genomecov -bg -g $sizes -i - > $bg
 else
-    sizes=${fai/.fai/.sizes}
-    cat $fai | cut -f1-2 | sed 's/|/_/g' > $sizes
-    cat $bed | sed 's/|/_/g' | bedtools genomecov -bg -g $sizes -i - > $bg
+  echo "# Convert to bigBed, removing pipes"
+  sed -i 's/|/_/g' $sizes
+  cat $bed | sed 's/|/_/g' | bedtools genomecov -bg -g $sizes -i - > $bg
 fi
 
 sort=${bg/.bg/.srt.bg}
-bedSort $bg $sort
+cut -f1 $sizes | sort -k 1,1 > $sizes.order
+echo "
+# Re-sort in alphabetical order so that the ucsc tools understands it"
+for sq in $(cat $sizes.order)
+do
+  echo "  $sq"
+  awk -v sq=$sq '$1==sq' $bg >> $sort
+done
 
-bw=${bed/.bed/.bigwig}
+echo "
+# Convert $sort to $bw"
+bw=`echo $bed | sed 's/.bed$/.bigwig/g'`
 bedGraphToBigWig $sort $sizes $bw
 
-rm $bg $sort
+echo "
+# Done! To cleaning up intermediate files, run:
+rm $bg $sort"
 
 

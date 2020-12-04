@@ -56,7 +56,8 @@ done
 
 if [[ "$asm2_fa" == "" ]]; then
 	echo -e "No asm2 found.\nDone!"
-	rm -r $asm1.0.meryl
+  echo "Remove intermediate files:
+rm -r $asm1.0.meryl"
 	exit 0
 fi
 
@@ -75,6 +76,7 @@ QV=`echo "$ASM_ONLY $TOTAL" | awk -v k=$k '{print (-10*log(1-(1-$1/$2)^(1/k))/lo
 echo -e "$asm\t$ASM_ONLY\t$TOTAL\t$QV\t$ERROR" >> $name.qv
 echo
 
-rm -r $asm1.0.meryl $asm2.0.meryl $asm.0.meryl
 echo "Done!"
+echo "Remove intermediate files:
+rm -r $asm1.0.meryl $asm2.0.meryl $asm.0.meryl"
 

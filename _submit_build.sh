@@ -24,16 +24,16 @@ mkdir -p logs
 offset=$((LEN/1000))
 leftovers=$((LEN%1000))
 
-cpus=32 # Max: 64 per each .meryl/ file writer
+cpus=16 # Max: 64 per each .meryl/ file writer
 if [[ "$mem_opt" = "F" ]]; then
 	mem=""
 else
-	mem="--mem=32g"
+	mem="--mem=24g"
 fi
 name=$out_prefix.count
 script=$build/count.sh
-partition=norm
-walltime=24:00:00
+partition=quick
+walltime=4:00:00
 path=`pwd`
 log=logs/$name.%A_%a.log
 
@@ -72,16 +72,16 @@ do
   input=`sed -n ${line_num}p $input_fofn`
   name=`echo $input | sed 's/.fastq.gz$//g' | sed 's/.fq.gz$//g' | sed 's/.fasta$//g' | sed 's/.fa$//g' | sed 's/.fasta.gz$//g' | sed 's/.fa.gz$//g'`
   name=`basename $name`
-  echo "$name.$k.$line_num.meryl" >> meryl_count.meryl.list
+  echo "$name.k$k.$line_num.meryl" >> meryl_count.meryl.list
 done
 
-cpus=32 # Max: 64 per each .meryl/ file writer
+cpus=16 # Max: 64 per each .meryl/ file writer
 if [[ "$mem_opt" = "F" ]]; then
   mem=""
 else
-  mem="--mem=32g"
+  mem="--mem=16g"
 fi
-walltime=4:00:00
+walltime=2:00:00
 partition=norm
 name=$out_prefix.union_sum
 script=$build/union_sum.sh
