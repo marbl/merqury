@@ -13,6 +13,10 @@ if [[ "$#" -lt 2 ]]; then
     echo -e "\t\t\tWhen child.meryl is provided, inherited hap-mers will be linked as"
     echo -e "\t\t\t - mat.inherited.meryl"
     echo -e "\t\t\t - pat.inherited.meryl"
+    echo
+    echo -e "\t\t\tUse the followings for evaluating trios"
+    echo -e "\t\t\t - mat.hapmer.meryl"
+    echo -e "\t\t\t - pat.hapmer.meryl"
     exit -1
 fi
 
