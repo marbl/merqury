@@ -69,7 +69,7 @@ Meryl has much improved in multi-threading and memory management. This will help
 ```shell
 git clone https://github.com/marbl/meryl.git
 cd meryl
-git reset --hard 6d396a0228f12c7657956c346e761b70ed596f5a
+git reset --hard 1926400fcb098ab3e4745ea0872d23f91d730340
 ```
 
 2. Clone this repository and set env variable MERQURY
