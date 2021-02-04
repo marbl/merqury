@@ -7,8 +7,8 @@ if [[ "$#" -lt 3 ]]; then
 	echo "***Submitter script to run each steps in parallele on slurm. Modify according to your cluster environment.***"
 	echo
         echo -e "\t<read-db.meryl>\t: k-mer counts of the read set"
-        echo -e "\t<mat.meryl>\t: k-mer counts of the maternal haplotype (ex. mat.inherited.meryl)"
-        echo -e "\t<pat.meryl>\t: k-mer counts of the paternal haplotype (ex. pat.inherited.meryl)"
+        echo -e "\t<mat.meryl>\t: k-mer counts of the maternal haplotype (ex. mat.hapmer.meryl)"
+        echo -e "\t<pat.meryl>\t: k-mer counts of the paternal haplotype (ex. pat.hapmer.meryl)"
         echo -e "\t<asm1.fasta>\t: Assembly fasta file (ex. pri.fasta, hap1.fasta or maternal.fasta)"
         echo -e "\t[asm2.fasta]\t: Additional fasta file (ex. alt.fasta, hap2.fasta or paternal.fasta)"
         echo -e "\t\t\t*asm1.meryl and asm2.meryl will be generated. Avoid using the same names as the hap-mer dbs"
@@ -132,9 +132,12 @@ sbatch -J $name --mem=$mem --partition=$partition --cpus-per-task=$cpus -D $path
 sbatch -J $name --mem=$mem --partition=$partition --cpus-per-task=$cpus -D $path $extra --time=$walltime --error=$log --output=$log $script $args > hap.jid
 
 #### Get phase blocks
-cpus=12
-#mem=24g
-mem=72g
+# This may take longer
+partition=norm
+walltime=12:00:00
+
+cpus=24
+mem=24g
 extra=""
 
 script="$MERQURY/trio/phase_block.sh"
@@ -152,6 +155,9 @@ sbatch -J $name --mem=$mem --partition=$partition --cpus-per-task=$cpus -D $path
 
 if [[ "$asm2" == "" ]] ; then
 	# Compute block stats
+  partition=quick
+  walltime=1:00:00
+
 	cpus=4
 	mem=8g
 	name="$out.block_N1"
@@ -168,8 +174,8 @@ if [[ "$asm2" == "" ]] ; then
 	exit 0
 fi
 
-cpus=12
-mem=72g
+cpus=24
+mem=24g
 extra=""
 args="$asm2 $hap1 $hap2 $out.${asm2/.fasta/}"
 name=$out.phase-block.${asm2/.fasta/}
@@ -180,6 +186,9 @@ sbatch -J $name --mem=$mem --partition=$partition --cpus-per-task=$cpus -D $path
 sbatch -J $name --mem=$mem --partition=$partition --cpus-per-task=$cpus -D $path $extra --time=$walltime --error=$log --output=$log $script $args > block2.jid
 
 # Compute block stats
+partition=quick
+walltime=1:00:00
+
 cpus=4
 mem=8g
 extra="--dependency=afterok:`cat block1.jid`,afterok:`cat block2.jid`"
