@@ -3,7 +3,7 @@
 echo "Usage: ./phase_block.sh <asm.fasta> <hap1.meryl> <hap2.meryl> <out>"
 
 if [[ $# -lt 4 ]]; then
-	exit -1
+  exit -1
 fi
 
 source $MERQURY/util/util.sh
@@ -19,25 +19,18 @@ k=`meryl print $hap1 | head -n 2 | tail -n 1 | awk '{print length($1)}'`
 echo "Detected k-mer size: $k"
 
 if [[ ! -e $scaff.gaps ]]; then
-	echo "
-	Get gaps"
-	java -jar -Xmx4g $MERQURY/trio/fastaGetGaps.jar $scaff.fasta $scaff.gaps
+  echo "
+  Get gaps"
+  java -jar -Xmx4g $MERQURY/trio/fastaGetGaps.jar $scaff.fasta $scaff.gaps
 fi
 awk '{print $1"\t"$2"\t"$3"\tgap"}' $scaff.gaps > $scaff.gaps.bed
 cat $scaff.gaps.bed > $scaff.bed
-
-# .fai for generating .tdf files
-if [ ! -e $scaff.fasta.fai ]; then
-	samtools faidx $scaff.fasta
-fi
 
 echo "
 Generate haplotype marker sites bed
 "
 if [ ! -s $out.sort.bed ]; then
-  meryl-lookup -dump -sequence $scaff.fasta -mers $hap1 $hap2 -labels ${hap1/.meryl/} ${hap2/.meryl/} |\
-    awk -v k=$k -F "\t" '$4=="T" {print $1"\t"$3"\t"($3+k)"\t"$NF}' |\
-    awk '{print $1"\t"$(NF-2)"\t"$(NF-1)"\t"$NF}' > $out.sort.bed
+  meryl-lookup -bed -sequence $scaff.fasta -mers $hap1 $hap2 -labels ${hap1/.meryl/} ${hap2/.meryl/} > $out.sort.bed
 else
   echo "*** Found $out.sort.bed. Skipping this step. ***"
 fi
@@ -46,12 +39,11 @@ for hap in $hap1 $hap2
 do
   hap=${hap/.meryl}
   echo "
-  -- Generating $out.$hap.tdf"
-  if [ ! -s $out.$hap.tdf ]; then
-    grep $hap $out.sort.bed > $out.$hap.bed
-    igvtools count $out.$hap.bed $out.$hap.tdf $scaff.fasta.fai
+  -- Generating $out.$hap.wig"
+  if [ ! -s $out.$hap.wig ]; then
+    meryl-lookup -wig-depth -sequence $scaff.fasta -mers $hap.meryl > $out.$hap.wig
   else
-    echo "*** Found $out.$hap.tdf. Skipping this step. ***"
+    echo "*** Found $out.$hap.wig. Skipping this step. ***"
   fi
 done
 

@@ -134,20 +134,14 @@ do
   rm -r $asm.solid.meryl
   echo
 
-  echo "# Generate ${asm}_only.tdf"
-  if [[ ! -e "$asm_fa.fai" ]]; then
-    echo "# Index $asm_fa"
-    samtools faidx $asm_fa
-    echo
-  fi
-
-  if [[ ! -e "${asm}_only.tdf" ]]; then
-    meryl-lookup -dump -sequence $asm_fa -mers ${asm}.0.meryl | awk -v k=$k -F "\t" '$4=="T" {print $1"\t"$3"\t"($3+k)}' > ${asm}_only.bed
-    igvtools count ${asm}_only.bed ${asm}_only.tdf $asm_fa.fai
-    echo "${asm}_only.tdf generated."
+  echo "# Generate ${asm}_only.wig"
+  if [[ ! -s "${asm}_only.wig" ]]; then
+    meryl-lookup -bed -sequence $asm_fa -mers ${asm}.0.meryl > ${asm}_only.bed
+    meryl-lookup -wig-depth -sequence $asm_fa -mers ${asm}.0.meryl > ${asm}_only.wig
+    echo "${asm}_only.wig generated."
   else
     echo
-    echo "*** ${asm}_only.tdf found. ***"
+    echo "*** ${asm}_only.wig found. ***"
   fi
   echo
 done
