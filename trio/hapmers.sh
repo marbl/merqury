@@ -14,8 +14,8 @@ if [[ "$#" -lt 2 ]]; then
 	echo -e "\t\tshrd.meryl\tShared k-mers"
 	echo
 	echo -e "\tOutput (when [child.meryl is given)"
-	echo -e "\t\thap1.hapmers.meryl\tHaplotype1, inherited k-mers (ex. maternal hap-mers)"
-	echo -e "\t\thap2.hapmers.meryl\tHaplotype2, inherited k-mers (ex. paternal hap-mers)"
+	echo -e "\t\thap1.hapmer.meryl\tHaplotype1, inherited k-mers (ex. maternal hap-mers)"
+	echo -e "\t\thap2.hapmer.meryl\tHaplotype2, inherited k-mers (ex. paternal hap-mers)"
 	echo -e "\t\tshrd.inherited.meryl\tShared, inherited k-mers"
 	echo
 	echo -e "\t*Build each .meryl dbs using the same k-size"

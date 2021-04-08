@@ -23,18 +23,29 @@ Merqury provides a set of tools for this purpose.
 Thanks to @EdHarry, a conda recipe is now available: https://anaconda.org/bioconda/merqury <br>
 On a new conda environment, run:
 ```shell
-conda install -c bioconda merqury
+conda install -c conda-forge -c bioconda merqury
 ```
 
 Or, if you have a different version of jdk installed or want to have a separate conda environnment for merqury:
 ```shell
-conda create -n merqury -c bioconda -c conda-forge merqury openjdk=11
+conda create -n merqury -c conda-forge -c bioconda merqury openjdk=11
 ```
 
 You will then need to activate the merqury environment before using it with:
 ```shell
 conda activate merqury
 ```
+
+Test running 
+```Shell
+Rscript $MERQURY/plot/plot_spectra_cn.R --help
+```
+
+In case R complains for version mismatches of the R packages, try
+```Shell
+conda update --all
+```
+It seems like R in conda isn't maintained anymore. Try to modify channel priority in `.condarc`.
 
 #### Direct installation 
 1. Get a working [Meryl](https://github.com/marbl/meryl) in your PATH
