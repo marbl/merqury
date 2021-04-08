@@ -65,11 +65,11 @@ Add installation dir paths for `bedtools`, `samtools` and `igvtools` to your env
 1. Get the latest [Meryl](https://github.com/marbl/meryl)
 
 
-Meryl has much improved in multi-threading and memory management. This will help getting a little speed up, especially for the meryl counting and set operations used in Merqury.
+Meryl has much improved in multi-threading and memory management. This will help getting ~3x speed up, especially for the meryl counting and set operations used in Merqury.
 ```shell
 git clone https://github.com/marbl/meryl.git
 cd meryl
-git reset --hard 1926400fcb098ab3e4745ea0872d23f91d730340
+git reset --hard 8fc38cc9bf66c224253bf7519189e801633dafa4
 ```
 
 2. Clone this repository and set env variable MERQURY
