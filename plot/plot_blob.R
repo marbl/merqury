@@ -41,11 +41,15 @@ blob_plot <- function(dat=NULL, out, w=6.5, h=6, pdf=FALSE) {
             fill = guide_legend(override.aes = list(size=5, alpha=1), order = 2, title = col_lab)) +
     xlab(x_lab) + ylab(y_lab)
 
-  outformat="png"
   if (pdf) {
     outformat="pdf"
-  }  
-  ggsave(file = paste(out, outformat, sep="."), height = h, width = w)
+    ggsave(file = paste(out, outformat, sep="."), height = h, width = w, device = cairo_pdf)
+
+  } else {
+    outformat="png"
+    device_setting = c("cairo", "cairo-png", "Xlib", "quartz")
+    ggsave(file = paste(out, outformat, sep="."), height = h, width = w, dpi=300, type = device_setting)
+  }
 
 }
 

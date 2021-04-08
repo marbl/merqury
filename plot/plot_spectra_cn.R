@@ -132,8 +132,13 @@ plot_stack <- function(dat, name, x_max, y_max, zero, cutoff) {
     coord_cartesian(xlim=c(0,x_max), ylim=c(0,y_max))
 }
 
-save_plot <- function(name, type, outformat, h, w) {
-  ggsave(file = paste(name, type, outformat, sep = "."), height = h, width = w)
+save_plot <- function(name, type, pdf, h, w) {
+  if (pdf) {  # pdf
+    ggsave(file = paste(name, type, "pdf", sep = "."), height = h, width = w, device = cairo_pdf)
+  } else {
+    device_setting = c("cairo", "cairo-png", "Xlib", "quartz")
+    ggsave(file = paste(name, type, "png", sep = "."), height = h, width = w, dpi=300, type = device_setting)
+  }
 }
 
 spectra_cn_plot  <-  function(hist, name, zero="", cutoff="", w=6, h=4.5, x_max, y_max, type="all", pdf=FALSE) {
@@ -176,27 +181,22 @@ spectra_cn_plot  <-  function(hist, name, zero="", cutoff="", w=6, h=4.5, x_max,
   }
   print(paste("y_max:", y_max, sep=" "))
 
-  outformat="png"
-  if (pdf) {
-    outformat="pdf"
-  }
-  
   if (type == "all" || type == "line") {
     print("## Line graph")
     plot_line(dat, name, x_max, y_max, zero = dat_0, cutoff = dat_cut)
-    save_plot(name=name, type="ln", outformat, h=h, w=w)
+    save_plot(name=name, type="ln", pdf, h=h, w=w)
   }
   
   if (type == "all" || type == "fill") {
     print("## Area under the curve filled")
     plot_fill(dat, name, x_max, y_max, zero = dat_0, cutoff = dat_cut)
-    save_plot(name=name, type="fl", outformat, h=h, w=w)
+    save_plot(name=name, type="fl", pdf, h=h, w=w)
   }
   
   if (type == "all" || type == "stack") {
     print("## Stacked")
     plot_stack(dat, name, x_max, y_max, zero = dat_0, cutoff = dat_cut)
-    save_plot(name=name, type="st", outformat, h=h, w=w)
+    save_plot(name=name, type="st", pdf, h=h, w=w)
   }
 }
 
