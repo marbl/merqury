@@ -49,7 +49,7 @@ cd merqury-1.3
 export MERQURY=$PWD
 ```
 Add the “export” part to your environment for both meryl and MERQURY (~/.bash_profile or ~/.profile).<br>
-Add installation dir paths for `bedtools`, `samtools` and `igvtools` to your environment.<br>
+Add installation dir paths for `bedtools` and `samtools` to your environment.<br>
 `source` it.
 
 #### Through Conda
