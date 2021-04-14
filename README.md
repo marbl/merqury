@@ -7,17 +7,50 @@ The k-mer spectrum of this read set can be used for independently evaluating ass
 Merqury provides a set of tools for this purpose.
 
 ## Dependency
-* gcc 4.8 or higher
-* meryl
+* gcc 7.4 or higher (for installing meryl)
+* [meryl v1.3](https://github.com/marbl/meryl/releases/tag/v1.3)
 * Java run time environment (JRE)
-* R with argparse, ggplot2, and scales (tested on R 3.6.1)
+* R with argparse, ggplot2, and scales (recommend R 4.0.3+)
 * bedtools
 * samtools
-* igvtools
+
+
+Note that igvtools is no longer used. The `.tdf` files are replaced with `.wig` files, compatable to IGV and UCSC genome browser.
+
 
 ## Installation
 
 ### Stable Release
+
+#### Direct installation 
+1. Get a working [Meryl](https://github.com/marbl/meryl) in your PATH
+
+
+Download meryl release: https://github.com/marbl/meryl/releases/tag/v1.3
+```shell
+tar -xJf meryl-1.3.*.tar.xz
+cd meryl-1.3/bin
+export PATH=$pwd:$PATH
+```
+
+If the binary doesn't work, download the source and compile:
+```shell
+cd meryl/src
+make -j 24
+export PATH=/path/to/meryl/…/bin:$PATH
+```
+See if we get help message with `meryl`.
+
+2. Download the release version and set env variable `$MERQURY`
+```shell
+wget https://github.com/marbl/merqury/archive/v1.3.tar.gz
+tar -zxvf v1.3.tar.gz
+cd merqury-1.3
+export MERQURY=$PWD
+```
+Add the “export” part to your environment for both meryl and MERQURY (~/.bash_profile or ~/.profile).<br>
+Add installation dir paths for `bedtools`, `samtools` and `igvtools` to your environment.<br>
+`source` it.
 
 #### Through Conda
 Thanks to @EdHarry, a conda recipe is now available: https://anaconda.org/bioconda/merqury <br>
@@ -46,49 +79,6 @@ In case R complains for version mismatches of the R packages, try
 conda update --all
 ```
 It seems like R in conda isn't maintained anymore. Try to modify channel priority in `.condarc`.
-
-#### Direct installation 
-1. Get a working [Meryl](https://github.com/marbl/meryl) in your PATH
-
-
-Download meryl release: https://github.com/marbl/meryl/releases/tag/v1.0
-
-If the binary doesn't work, download the source and compile:
-```shell
-cd meryl/src
-make -j 24
-export PATH=/path/to/meryl/…/bin:$PATH
-```
-See if we get help message for `meryl`.
-
-2. Download the release version and set env variable `$MERQURY`
-```shell
-wget https://github.com/marbl/merqury/archive/v1.1.tar.gz
-tar -zxvf v1.1.tar.gz
-cd merqury-1.1
-export MERQURY=$PWD
-```
-Add the “export” part to your environment (~/.bash_profile or ~/.profile).<br>
-Add installation dir paths for `bedtools`, `samtools` and `igvtools` to your environment.<br>
-`source` it.
-
-### Experimental version
-1. Get the latest [Meryl](https://github.com/marbl/meryl)
-
-
-Meryl has much improved in multi-threading and memory management. This will help getting ~3x speed up, especially for the meryl counting and set operations used in Merqury.
-```shell
-git clone https://github.com/marbl/meryl.git
-cd meryl
-git reset --hard 8fc38cc9bf66c224253bf7519189e801633dafa4
-```
-
-2. Clone this repository and set env variable MERQURY
-```shell
-git clone https://github.com/marbl/merqury.git
-cd merqury
-export MERQURY=$PWD
-```
 
 ## Run
 
