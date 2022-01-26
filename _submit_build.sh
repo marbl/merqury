@@ -32,7 +32,7 @@ else
 fi
 name=$out_prefix.count
 script=$build/count.sh
-partition=quick
+partition=norm
 walltime=4:00:00
 path=`pwd`
 log=logs/$name.%A_%a.log
