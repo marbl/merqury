@@ -14,6 +14,9 @@ fi
 
 tid=$SLURM_ARRAY_TASK_ID
 LINE_NUM=$2
+# LINES_PER_FILE=400000 # HiFi
+LINES_PER_FILE=300000000 # Illumina
+
 
 if [ -z $tid ]; then
     tid=$LINE_NUM
@@ -40,8 +43,8 @@ Splitting input file $fq"
 
 if [[ ${fq##*.} == "gz" ]]; then
 	echo "\
-	zcat $fq | split -a 4 -d -l 300000000 --additional-suffix=.fq   - split/$fq_prefix."
-	zcat $fq | split -a 4 -d -l 300000000 --additional-suffix=".fq" - split/$fq_prefix.
+	zcat $fq | split -a 4 -d -l $LINES_PER_FILE --additional-suffix=.fq   - split/$fq_prefix."
+	zcat $fq | split -a 4 -d -l $LINES_PER_FILE --additional-suffix=".fq" - split/$fq_prefix.
 else
 	echo "\
 	split -a 4 -d -l 300000000 --additional-suffix=.fq   $fq split/$fq_prefix."
