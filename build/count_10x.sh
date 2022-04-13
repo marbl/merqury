@@ -2,7 +2,8 @@
 
 
 if [[ -z $1 ]] || [[ -z $2 ]]; then
-  echo "Usage: ./count.sh <k> <input.fofn> [offset line_num]"
+  echo "Usage: ./count.sh [-c] <k> <input.fofn> [offset line_num]"
+  echo -e "\t-c: OPTIONAL. homopolymer compress the sequence before counting kmers."
   echo -e "\t<k>: k-size mers will be collected. REQUIRED."
   echo -e "\t<input.fofn>: list of fastq.gz file. Read pair 1 from 10X reads. REQUIRED."
   echo -e "\t[offset]: OPTIONAL. DEFAULT=0. For array job limit only."
@@ -10,6 +11,11 @@ if [[ -z $1 ]] || [[ -z $2 ]]; then
   echo -e "\t\t\$SLURM_ARRAY_TASK_ID will be used if not specified."
   echo -e "\t*NOTE* This script is trimming off the first 23 bases before kmer counting. Only useful for 10X barcode trimming."
   exit -1
+fi
+
+if [ "x$1" = "x-c" ]; then
+  compress="compress"
+  shift
 fi
 
 k=$1
@@ -56,9 +62,9 @@ if [ ! -d $output ]; then
   # Run meryl count: Collect k-mer frequencies
   # Ignore the first 23 bases (6 Illumina library + 1 padding + 16 barcode bases)
   echo "
-  zcat $input | awk '{if (NR%2==1) {print $1} else {print substr($1,24)}}' | meryl k=$k $cpus $mem count output $output -
+  zcat $input | awk '{if (NR%2==1) {print $1} else {print substr($1,24)}}' | meryl k=$k $cpus $mem count $compress output $output -
   "
-  zcat $input | awk '{if (NR%2==1) {print $1} else {print substr($1,24)}}' | meryl k=$k $cpus $mem count output $output -
+  zcat $input | awk '{if (NR%2==1) {print $1} else {print substr($1,24)}}' | meryl k=$k $cpus $mem count $compress output $output -
 else
   echo "$output dir already exist. Nothing to do with $name."
 fi

@@ -1,7 +1,12 @@
 #!/bin/bash
 
-echo "Usage: ./spectra-hap.sh <reads.meryl> <hap1.meryl> <hap2.meryl> <asm1.fasta> [asm2.fasta] <out-prefix>"
+echo "Usage: ./spectra-hap.sh [-c] <reads.meryl> <hap1.meryl> <hap2.meryl> <asm1.fasta> [asm2.fasta] <out-prefix>"
 echo
+
+if [ "x$1" = "x-c" ]; then
+  compress="compress"
+  shift
+fi
 
 if [[ $# -lt 5 ]]; then
 	echo "Not enough arguements given."
@@ -58,7 +63,7 @@ do
     asm=`echo $asm_fa | sed 's/.fasta$//g' | sed 's/.fa$//g' | sed 's/.fasta.gz$//g' | sed 's/.fa.gz$//g'`
     if ! [[ "$(ls -A $asm.meryl 2> /dev/null )" ]]; then
         echo "Generate meryl db for $asm_fa"
-        meryl count k=$k output $asm.meryl $asm_fa
+        meryl count k=$k output $asm.meryl $compress $asm_fa
     fi
     
     # For each haplotype

@@ -1,10 +1,11 @@
 #! /bin/bash
 
 if [[ "$#" -lt 3 ]]; then
-	echo "Usage: merqury.sh <read-db.meryl> [<mat.meryl> <pat.meryl>] <asm1.fasta> [asm2.fasta] <out>"
+	echo "Usage: merqury.sh [-c] <read-db.meryl> [<mat.meryl> <pat.meryl>] <asm1.fasta> [asm2.fasta] <out>"
+  echo -e "\t-c\t\t: [OPTIONAL] input meryl databases are homopolymer compressed"
 	echo -e "\t<read-db.meryl>\t: k-mer counts of the read set"
-	echo -e "\t<mat.meryl>\t\t: k-mer counts of the maternal haplotype (ex. mat.hapmer.meryl)"
-	echo -e "\t<pat.meryl>\t\t: k-mer counts of the paternal haplotype (ex. pat.hapmer.meryl)"
+	echo -e "\t<mat.meryl>\t: k-mer counts of the maternal haplotype (ex. mat.hapmer.meryl)"
+	echo -e "\t<pat.meryl>\t: k-mer counts of the paternal haplotype (ex. pat.hapmer.meryl)"
 	echo -e "\t<asm1.fasta>\t: Assembly fasta file (ex. pri.fasta, hap1.fasta or maternal.fasta)"
 	echo -e "\t[asm2.fasta]\t: Additional fasta file (ex. alt.fasta, hap2.fasta or paternal.fasta)"
 	echo -e "\t*asm1.meryl and asm2.meryl will be generated. Avoid using the same names as the hap-mer dbs"
@@ -14,6 +15,11 @@ if [[ "$#" -lt 3 ]]; then
 fi
 
 source $MERQURY/util/util.sh
+
+if [ "x$1" = "x-c" ]; then
+  compress="-c"
+  shift
+fi
 
 readdb=`link $1`
 echo "read: $readdb"
@@ -84,7 +90,7 @@ echo "
 Get haplotype specfic spectra-cn plots"
 name=$out.spectra-hap
 log=logs/$name.log
-$MERQURY/trio/spectra-hap.sh $readdb $hap1 $hap2 $asm1 $asm2 $out > $log 2> $log
+$MERQURY/trio/spectra-hap.sh $compress $readdb $hap1 $hap2 $asm1 $asm2 $out > $log 2> $log
 
 echo "
 Get phase blocks"

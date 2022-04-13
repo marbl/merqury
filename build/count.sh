@@ -1,14 +1,20 @@
 #!/bin/bash
 
 
-if [[ -z $1 ]] || [[ -z $2 ]]; then
-    echo "Usage: ./count.sh <k> <input.fofn> [offset line_num]"
+if [[ -z $1 ]] || [[ -z $2 ]; then
+    echo "Usage: ./count.sh [-c] <k> <input.fofn> [offset line_num]"
+    echo -e "\t-c: OPTIONAL. homopolymer compress the sequence before counting kmers."
     echo -e "\t<k>: k-size mers will be collected. REQUIRED."
     echo -e "\t<input.fofn>: list of fastq / fasta file. REQUIRED."
     echo -e "\t[offset]: OPTIONAL. DEFAULT=0. For array job limit only."
     echo -e "\t[line_num]: OPTIONAL. (offset * 1000 + line_num)'th line of input.fofn will be the input."
     echo -e "\t\t\$SLURM_ARRAY_TASK_ID will be used if not specified."
     exit -1
+fi
+
+if [ "x$1" = "x-c" ]; then
+  compress="compress"
+  shift
 fi
 
 k=$1
@@ -48,9 +54,9 @@ output=$name.k$k.$line_num.meryl
 if [ ! -d $output ]; then
 # Run meryl count: Collect k-mer frequencies
 echo "
-meryl k=$k memory=$mem count $input output $output
+meryl k=$k memory=$mem count $compress $input output $output
 "
-meryl k=$k memory=$mem count $input output $output
+meryl k=$k memory=$mem count $compress $input output $output
 else
 echo "$output dir already exist. Nothing to do with $name."
 fi
