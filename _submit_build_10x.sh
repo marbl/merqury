@@ -3,13 +3,19 @@
 build=$MERQURY/build
 
 if [ -z $1 ]; then
-    echo "Usage: ./_submit_build.sh <k-size> <R1.fofn> <R2.fofn> <out_prefix> [mem=T]"
+    echo "Usage: ./_submit_build.sh [-c] <k-size> <R1.fofn> <R2.fofn> <out_prefix> [mem=T]"
+    echo -e "\t-c: OPTIONAL. homopolymer compress the sequence before counting kmers."
     echo -e "\t<k-size>: kmer size k"
     echo -e "\t<R1.fofn>: Read 1. The first 23 bases will get stripped off."
     echo -e "\t<R2.fofn>: Read 2. Will be processed as normal."
     echo -e "\t<out_prefix>: Final merged meryl db will be named as <out_prefix>.meryl"
     echo -e "\t[mem=T]: Submit memory option on sbatch [DEFAULT=TRUE]. Set it to F to turn it off."
     exit -1
+fi
+
+if [ "x$1" = "x-c" ]; then
+  compress="-c"
+  shift
 fi
 
 k=$1
@@ -91,7 +97,7 @@ else
 fi
 name=$out_prefix.concat
 script=$build/concat_splits.sh
-args="$k $R1 $out_prefix $R2"
+args="$compress $k $R1 $out_prefix $R2"
 partition=quick
 walltime=10:00
 path=`pwd`
