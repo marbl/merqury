@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 if [[ $# -lt 3 ]]; then
 	echo "Usage: ./exclude_reads.sh <in.meryl> <input.map> <out.prefix> [-10x] [num_line]"

@@ -1,4 +1,4 @@
-#! /bin/bash
+#! usr/bin/env bash
 
 echo "Usage: ./_submit_split.sh <input.fofn>"
 echo "Split the input.fofn for every 300 million lines"

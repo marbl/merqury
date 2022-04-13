@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 if [[ "$#" -lt 3 ]]; then
 	echo "Usage: ./qv.sh <read.meryl> <asm1.fasta> [asm2.fasta] <out>"

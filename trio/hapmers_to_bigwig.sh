@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 if [[ -z $1 ]]; then
     echo "Usage: ./hapmers_to_bigWig.sh <in.hap.wig> <asm.fai>"

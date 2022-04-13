@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 echo "Usage: ./spectra-hap.sh [-c] <reads.meryl> <hap1.meryl> <hap2.meryl> <asm1.fasta> [asm2.fasta] <out-prefix>"
 echo

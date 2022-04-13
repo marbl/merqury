@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 if [ -z $1 ]; then
 	echo "Usage: ./best_k.sh <genome_size> [tolerable_collision_rate]"

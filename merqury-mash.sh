@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 if [[ "$#" -lt 4 ]]; then
 echo "Usage: ./merqury-mash.sh <k-size> <asm.fasta> <input_fofn> <cpus>"

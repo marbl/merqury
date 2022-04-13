@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 if [[ "$#" -lt 3 ]]; then
   echo "Usage: ./_submit_exclude.sh mat.meryl pat.meryl input.map [-10x]"

@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 if [[ $# -lt 4 ]]; then
 	echo "Usage: ./switch_error.sh <in.sort.bed> <out> <num_switch> <short_range> [include_gaps]"

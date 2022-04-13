@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 echo "Usage: spectra-cn.sh <read.meryl> <asm1.fasta> [asm2.fasta] out-prefix"
 echo -e "\t<read.meryl>\t: Generated with meryl count from i.e. illumina wgs reads"

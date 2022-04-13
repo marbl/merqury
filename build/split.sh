@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 echo "Usage: ./split.sh <input.fofn> [LINE_NUM]"
 echo -e "\t<input.fofn>: fastq.gz files we want to split by every 300 million lines."

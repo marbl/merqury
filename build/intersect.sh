@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 if [[ -z $1 ]] || [[ -z $2 ]]; then
 	echo "Usage: ./intersect.sh <db1.meryl> <db2.meryl> [out]"

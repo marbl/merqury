@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 echo "Usage: ./concat_splits.sh <k-size> <input.fofn> <out_prefix> [input2.fofn]"
 echo "[input2.fofn]: Only needed for 10X data"

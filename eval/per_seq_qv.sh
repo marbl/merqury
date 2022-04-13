@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 if [[ "$#" -lt 3 ]]; then
 	echo "Usage: ./per_seq_qv.sh seq.fasta read.meryl out"
