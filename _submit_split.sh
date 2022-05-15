@@ -14,7 +14,9 @@ LEN=`wc -l $1 | awk '{print $1}'`
 cpus=6
 mem=4g
 name=split
-script=$MERQURY/build/split.sh
+#script=$MERQURY/build/split.sh
+#script=$MERQURY/build/split_hifi.sh
+script=$MERQURY/build/split_ont.sh
 args=$1
 partition=norm
 walltime=1-0
@@ -29,6 +31,6 @@ else
 fi
 
 echo "\
-sbatch -J $name --mem=$mem --partition=$partition --cpus-per-task=$cpus -D $path $extra --time=$walltime --error=$log --output=$log $script $args"
-sbatch -J $name --mem=$mem --partition=$partition --cpus-per-task=$cpus -D $path $extra --time=$walltime --error=$log --output=$log $script $args
+sbatch -J $name --mem=$mem --partition=$partition --gres=lscratch:500 --cpus-per-task=$cpus -D $path $extra --time=$walltime --error=$log --output=$log $script $args"
+sbatch -J $name --mem=$mem --partition=$partition --gres=lscratch:500 --cpus-per-task=$cpus -D $path $extra --time=$walltime --error=$log --output=$log $script $args
 
