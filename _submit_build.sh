@@ -79,7 +79,7 @@ cpus=16 # Max: 64 per each .meryl/ file writer
 if [[ "$mem_opt" = "F" ]]; then
   mem=""
 else
-  mem="--mem=16g"
+  mem="--mem=32g"
 fi
 walltime=2:00:00
 partition=norm
