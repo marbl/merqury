@@ -1,21 +1,23 @@
 #!/usr/bin/env bash
 
 if [[ "$#" -lt 3 ]]; then
-	echo "Usage: merqury.sh [-c] <read-db.meryl> [<mat.meryl> <pat.meryl>] <asm1.fasta> [asm2.fasta] <out>"
-  echo -e "\t-c\t\t: [OPTIONAL] input meryl databases are homopolymer compressed"
-	echo -e "\t<read-db.meryl>\t: k-mer counts of the read set"
-	echo -e "\t<mat.meryl>\t: k-mer counts of the maternal haplotype (ex. mat.hapmer.meryl)"
-	echo -e "\t<pat.meryl>\t: k-mer counts of the paternal haplotype (ex. pat.hapmer.meryl)"
-	echo -e "\t<asm1.fasta>\t: Assembly fasta file (ex. pri.fasta, hap1.fasta or maternal.fasta)"
-	echo -e "\t[asm2.fasta]\t: Additional fasta file (ex. alt.fasta, hap2.fasta or paternal.fasta)"
-	echo -e "\t*asm1.meryl and asm2.meryl will be generated. Avoid using the same names as the hap-mer dbs"
-	echo -e "\t<out>\t\t: Output prefix"
-	echo -e "Arang Rhie, 2020-01-29. arrhie@gmail.com"
-	exit 0
+  echo "Usage: merqury.sh [-c] <read-db.meryl> [<mat.meryl> <pat.meryl>] <asm1.fasta> [asm2.fasta] <out>"
+  echo -e "\t-c\t\t: [OPTIONAL] input meryl databases are homopolymer compressed, while asm.fasta isn't"
+  echo -e "\t\t\t  This option is not supported for trio-based analysis. Use pre-compressed assemblies with no -c option." 
+  echo -e "\t<read-db.meryl>\t: k-mer counts of the read set"
+  echo -e "\t<mat.meryl>\t: k-mer counts of the maternal haplotype (ex. mat.hapmer.meryl)"
+  echo -e "\t<pat.meryl>\t: k-mer counts of the paternal haplotype (ex. pat.hapmer.meryl)"
+  echo -e "\t<asm1.fasta>\t: Assembly fasta file (ex. pri.fasta, hap1.fasta or maternal.fasta)"
+  echo -e "\t[asm2.fasta]\t: Additional fasta file (ex. alt.fasta, hap2.fasta or paternal.fasta)"
+  echo -e "\t*asm1.meryl and asm2.meryl will be generated. Avoid using the same names as the hap-mer dbs"
+  echo -e "\t<out>\t\t: Output prefix"
+  echo -e "Arang Rhie, 2022-09-07. arrhie@gmail.com"
+  exit 0
 fi
 
 source $MERQURY/util/util.sh
 
+compress=""
 if [ "x$1" = "x-c" ]; then
   compress="-c"
   shift
@@ -74,9 +76,15 @@ echo "
 Get spectra-cn plots and QV stats"
 name=$out.spectra-cn
 log=logs/$name.log
-$MERQURY/eval/spectra-cn.sh $readdb $asm1 $asm2 $out > $log 2> $log
+$MERQURY/eval/spectra-cn.sh $compress $readdb $asm1 $asm2 $out &> $log
 
 if [ -z $hap1 ]; then
+	exit 0
+fi
+
+if [ ! -z $compress ]; then
+	echo "[ WARNING ] :: -c option is not supported for trio-based analysis."
+	echo "[ WARNING ] :: Use pre-compressed assemblies with no -c option."
 	exit 0
 fi
 
@@ -84,20 +92,20 @@ echo "
 Get blob plots"
 name=$out.blob
 log=logs/$name.log
-$MERQURY/trio/hap_blob.sh $hap1 $hap2 $asm1 $asm2 $out > $log 2> $log
+$MERQURY/trio/hap_blob.sh $hap1 $hap2 $asm1 $asm2 $out &> $log
 
 echo "
 Get haplotype specfic spectra-cn plots"
 name=$out.spectra-hap
 log=logs/$name.log
-$MERQURY/trio/spectra-hap.sh $compress $readdb $hap1 $hap2 $asm1 $asm2 $out > $log 2> $log
+$MERQURY/trio/spectra-hap.sh $readdb $hap1 $hap2 $asm1 $asm2 $out &> $log
 
 echo "
 Get phase blocks"
 name=$out.phase-block1
 log=logs/$name.log
 
-$MERQURY/trio/phase_block.sh $asm1 $hap1 $hap2 $out.${asm1/.fasta/}  > $log 2> $log
+$MERQURY/trio/phase_block.sh $asm1 $hap1 $hap2 $out.${asm1/.fasta/} &> $log
 echo
 
 if [ -z $asm2 ] ; then
@@ -112,7 +120,7 @@ fi
 
 name=$out.phase-block2
 log=logs/$name.log
-$MERQURY/trio/phase_block.sh $asm2 $hap1 $hap2 $out.${asm2/.fasta/}  > $log 2> $log
+$MERQURY/trio/phase_block.sh $asm2 $hap1 $hap2 $out.${asm2/.fasta/} &> $log
 
 echo "
 Get block N plots"
