@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 if [ -z $1 ]; then
 	echo "Usage: ./_union_sum.sh <k-size> <meryl.list> <output_prefix>"
 	echo -e "Merge <meryl.list>"

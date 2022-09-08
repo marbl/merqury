@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 echo "Usage: ./phase_block.sh <asm.fasta> <hap1.meryl> <hap2.meryl> <out>"
 

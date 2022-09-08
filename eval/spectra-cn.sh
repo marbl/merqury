@@ -1,6 +1,7 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
-echo "Usage: spectra-cn.sh <read.meryl> <asm1.fasta> [asm2.fasta] out-prefix"
+echo "Usage: spectra-cn.sh [-c] <read.meryl> <asm1.fasta> [asm2.fasta] out-prefix"
+echo -e "\t-c\t\t: [OPTIONAL] input meryl databases are homopolymer compressed, while asm.fasta isn't"
 echo -e "\t<read.meryl>\t: Generated with meryl count from i.e. illumina wgs reads"
 echo -e "\t<asm1.fasta>\t: haplotype 1 assembly. gzipped or not"
 echo -e "\t[asm2.fasta]\t: haplotype 2 assembly. gzipped or not"
@@ -16,6 +17,18 @@ if [[ $# -lt 3 ]]; then
 fi
 
 source $MERQURY/util/util.sh
+
+compress=""
+if [ "x$1" = "x-c" ]; then
+  compress="compress"
+  echo
+  echo "Compress mode enabled."
+  echo "  spectra-cn, spectra-asm plots and qv will be generated."
+  echo "  for the error .bed and .wig tracks,"
+  echo "  use pre-compressed assemblies with no -c option."
+  echo
+  shift
+fi
 
 read=`link $1`
 asm1_fa=`link $2`
@@ -61,7 +74,7 @@ do
 
   if [ ! -e $asm.meryl ]; then
     echo "# Generate meryl db for $asm"
-    meryl count k=$k output ${asm}.meryl $asm_fa
+    meryl count k=$k $compress output ${asm}.meryl $asm_fa
     echo
   fi
 
@@ -134,14 +147,16 @@ do
   rm -r $asm.solid.meryl
   echo
 
-  echo "# Generate ${asm}_only.wig"
-  if [[ ! -s "${asm}_only.wig" ]]; then
-    meryl-lookup -bed -sequence $asm_fa -mers ${asm}.0.meryl > ${asm}_only.bed
-    meryl-lookup -wig-depth -sequence $asm_fa -mers ${asm}.0.meryl > ${asm}_only.wig
-    echo "${asm}_only.wig generated."
-  else
-    echo
-    echo "*** ${asm}_only.wig found. ***"
+  if [[ -z $compress ]]; then
+    echo "# Generate ${asm}_only.wig"
+    if [[ ! -s "${asm}_only.wig" ]]; then
+      meryl-lookup -bed -sequence $asm_fa -mers ${asm}.0.meryl > ${asm}_only.bed
+      meryl-lookup -wig-depth -sequence $asm_fa -mers ${asm}.0.meryl > ${asm}_only.wig
+      echo "${asm}_only.wig generated."
+    else
+      echo
+      echo "*** ${asm}_only.wig found. ***"
+    fi
   fi
   echo
 done

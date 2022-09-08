@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 if [[ -z $1 ]]; then
     echo "Usage: ./bed_to_bigWig.sh <bed> <asm.fai> <convert_pipes>"

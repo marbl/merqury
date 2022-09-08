@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 if [[ -z $1 ]]; then
 	echo "Usage: ./false_duplications.sh <name.asm.spectra-cn.hist>"

@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 if [[ "$#" -lt 3 ]]; then
 	echo "Usage: ./read_multiplicity.sh <asm.fasta> <read.meryl> <out>"

@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 if [[ "$#" -lt 2 ]]; then
     echo "Usage: ./_submit_hapmers.sh <mat.meryl> <pat.meryl> [child.meryl]"

@@ -1,15 +1,21 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 build=$MERQURY/build
 
 if [ -z $1 ]; then
-  echo "Usage: ./_submit_meryl2_build.sh <k-size> <input.fofn> <out_prefix> [mem=T]"
+  echo "Usage: ./_submit_meryl2_build.sh [-c] <k-size> <input.fofn> <out_prefix> [mem=T]"
+  echo -e "\t-c: OPTIONAL. homopolymer compress the sequence before counting kmers."
   echo -e "\t<k-size>: kmer size k"
   echo -e "\t<input.fofn>: ls *.fastq.gz > input.fofn. include both R1 and R2 for paired-end sequencing."
   echo -e "\t\taccepts fasta, fastq, gzipped or not."
   echo -e "\t<out_prefix>: Final merged meryl db will be named as <out_prefix>.meryl"
   echo -e "\t[mem=T]: Submit memory option on sbatch [DEFAULT=TRUE]. Set it to F to turn it off."
   exit 0
+fi
+
+if [ "x$1" = "x-c" ]; then
+  compress="-c"
+  shift
 fi
 
 k=$1
@@ -74,7 +80,7 @@ if [ $split -eq 1 ]; then
   fi
 	name=$out_prefix.concat
 	script=$build/concat_splits.sh
-	args="$k $input_fofn $out_prefix"
+	args="$compress $k $input_fofn $out_prefix"
 	partition=quick
 	walltime=10:00
 	path=`pwd`
@@ -113,7 +119,7 @@ fi
 
 for i in $(seq 0 $offset)
 do
-  args="$k $input_fofn $i"
+  args="$compress $k $input_fofn $i"
   if [[ $i -eq $offset ]]; then
     arr_max=$leftovers
   else

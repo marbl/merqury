@@ -1,11 +1,13 @@
-#! /bin/bash
+#!/usr/bin/env bash
 
 if [[ "$#" -lt 3 ]]; then
 	echo
-        echo "Usage: _submit_merqury.sh <read-db.meryl> [<mat.meryl> <pat.meryl>] <asm1.fasta> [asm2.fasta] <out>"
+        echo "Usage: _submit_merqury.sh [-c] <read-db.meryl> [<mat.meryl> <pat.meryl>] <asm1.fasta> [asm2.fasta] <out>"
 	echo
 	echo "***Submitter script to run each steps in parallele on slurm. Modify according to your cluster environment.***"
 	echo
+	echo -e "\t-c\t\t: [OPTIONAL] input meryl databases are homopolymer compressed, while asm.fasta isn't."
+	echo -e "\t\t\t  This option is not supported for trio-based analysis. Use pre-compressed assemblies with no -c option." 
         echo -e "\t<read-db.meryl>\t: k-mer counts of the read set"
         echo -e "\t<mat.meryl>\t: k-mer counts of the maternal haplotype (ex. mat.hapmer.meryl)"
         echo -e "\t<pat.meryl>\t: k-mer counts of the paternal haplotype (ex. pat.hapmer.meryl)"
@@ -18,6 +20,12 @@ if [[ "$#" -lt 3 ]]; then
 fi
 
 source $MERQURY/util/util.sh
+
+compress=""
+if [ "x$1" = "x-c" ]; then
+  compress="-c"
+  shift
+fi
 
 readdb=`link $1`
 echo "read: $readdb"
@@ -86,7 +94,7 @@ cpus=24
 mem=24g
 name=$out.spectra-cn
 script="$MERQURY/eval/spectra-cn.sh"
-args="$readdb $asm1 $asm2 $out"
+args="$compress $readdb $asm1 $asm2 $out"
 log=logs/$name.%A.log
 
 echo "\
@@ -96,6 +104,12 @@ jid=`cat cn.jid`
 
 if [ -z $hap1 ]; then
 	exit 0
+fi
+
+if [ ! -z $compress ]; then
+        echo "[ WARNING ] :: -c option is not supported for trio-based analysis."
+        echo "[ WARNING ] :: Use pre-compressed assemblies and run with no -c option."
+        exit 0
 fi
 
 # All below jobs are expected to finish within 4 hours
