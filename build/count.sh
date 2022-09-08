@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 
-if [[ -z $1 ]] || [[ -z $2 ]; then
+if [[ -z $1 ]] || [[ -z $2 ]]; then
     echo "Usage: ./count.sh [-c] <k> <input.fofn> [offset line_num]"
     echo -e "\t-c: OPTIONAL. homopolymer compress the sequence before counting kmers."
     echo -e "\t<k>: k-size mers will be collected. REQUIRED."
