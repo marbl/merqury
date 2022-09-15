@@ -45,13 +45,19 @@ do
   echo "# QV statistics for $asm"
   ASM_ONLY=`meryl statistics $asm.0.meryl  | head -n4 | tail -n1 | awk '{print $2}'`
   TOTAL=`meryl statistics $asm.meryl  | head -n4 | tail -n1 | awk '{print $2}'`
-  ERROR=`echo "$ASM_ONLY $TOTAL" | awk -v k=$k '{print (1-(1-$1/$2)^(1/k))}'`
-  QV=`echo "$ASM_ONLY $TOTAL" | awk -v k=$k '{print (-10*log(1-(1-$1/$2)^(1/k))/log(10))}'`
-  echo -e "$asm\t$ASM_ONLY\t$TOTAL\t$QV\t$ERROR" >> $name.qv
+  if [[ $TOTAL -eq 0 ]]; then
+    echo "[[ ERROR ]] :: $asm has no kmers."
+  else
+    ERROR=`echo "$ASM_ONLY $TOTAL" | awk -v k=$k '{print (1-(1-$1/$2)^(1/k))}'`
+    QV=`echo "$ASM_ONLY $TOTAL" | awk -v k=$k '{print (-10*log(1-(1-$1/$2)^(1/k))/log(10))}'`
+    echo -e "$asm\t$ASM_ONLY\t$TOTAL\t$QV\t$ERROR" >> $name.qv
+  fi
   echo
 
   meryl-lookup -existence -sequence $asm_fa -mers $asm.0.meryl/ | \
-    awk -v k=$k '{print $1"\t"$4"\t"$2"\t"(-10*log(1-(1-$4/$2)^(1/k))/log(10))"\t"(1-(1-$4/$2)^(1/k))}' > $name.$asm.qv
+    awk -v k=$k '{if ($2==0) {err="na"; qv="na"} \
+                 else        {err=(1-(1-$4/$2)^(1/k)); qv=(-10*log(err)/log(10))}; \
+                 print $1"\t"$4"\t"$2"\t"qv"\t"err}' > $name.$asm.qv
 done
 
 if [[ "$asm2_fa" == "" ]]; then
