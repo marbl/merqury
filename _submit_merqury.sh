@@ -117,8 +117,8 @@ partition=quick
 walltime=4:00:00
 
 #### Get blob plots
-cpus=8
-mem=10g
+cpus=12
+mem=16g
 
 script="$MERQURY/trio/hap_blob.sh"
 # ./hap_blob.sh <hap1.meryl> <hap2.meryl> <asm1.fasta> [asm2.fasta] <out>
@@ -151,7 +151,7 @@ partition=norm
 walltime=12:00:00
 
 cpus=24
-mem=24g
+mem=28g
 extra=""
 
 script="$MERQURY/trio/phase_block.sh"
