@@ -20,6 +20,31 @@ Note that igvtools is no longer used. The `.tdf` files are replaced with `.wig` 
 
 ## Installation
 
+### Version supporting homopolymer compressed hapmers for Verkko (Recommended)
+Only the latest Merqury version supports `compressed` option used in Verkko.
+We are working to get a stable release out shortly, until then please use the following:
+* [Meryl d88](https://github.com/marbl/meryl/commit/d88ea50402d37da153d603a537e122bb72eda7d1), use git 2.25.1+ and gcc 7.4+
+```shell
+git clone https://github.com/marbl/meryl.git
+cd meryl
+git checkout d88ea50402d37da153d603a537e122bb72eda7d1
+cd src
+make -j 24
+export PATH=/path/to/meryl/…/bin:$PATH
+```
+* Merqury
+```shell
+git clone https://github.com/marbl/merqury.git
+cd merqury
+export MERQURY=$PWD
+```
+Other dependency:
+* Java run time environment (JRE)
+* R with argparse, ggplot2, and scales (recommend R 4.0.3+)
+* bedtools
+* samtools
+
+
 ### Stable Release
 
 #### Direct installation 
