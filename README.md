@@ -7,7 +7,7 @@ The k-mer spectrum of this read set can be used for independently evaluating ass
 Merqury provides a set of tools for this purpose.
 
 ## Dependency
-* gcc 7.4 or higher (for installing meryl)
+* gcc 10.2.0 or higher (for installing meryl)
 * [meryl v1.3](https://github.com/marbl/meryl/releases/tag/v1.3)
 * Java run time environment (JRE)
 * R with argparse, ggplot2, and scales (recommend R 4.0.3+)
