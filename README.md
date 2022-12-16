@@ -23,14 +23,8 @@ Note that igvtools is no longer used. The `.tdf` files are replaced with `.wig` 
 ### Version supporting homopolymer compressed hapmers for Verkko (Recommended)
 Only the latest Merqury version supports `compressed` option used in Verkko.
 We are working to get a stable release out shortly, until then please use the following:
-* [Meryl d88](https://github.com/marbl/meryl/commit/d88ea50402d37da153d603a537e122bb72eda7d1), use git 2.25.1+ and gcc 7.4+
 ```shell
-git clone https://github.com/marbl/meryl.git
-cd meryl
-git checkout d88ea50402d37da153d603a537e122bb72eda7d1
-cd src
-make -j 24
-export PATH=/path/to/meryl/…/bin:$PATH
+export PATH=/path/to/verkko/lib/verkko/bin:$PATH
 ```
 * Merqury
 ```shell
