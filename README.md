@@ -7,8 +7,8 @@ The k-mer spectrum of this read set can be used for independently evaluating ass
 Merqury provides a set of tools for this purpose.
 
 ## Dependency
-* gcc 10.2.0 or higher (for installing meryl)
-* [meryl v1.3](https://github.com/marbl/meryl/releases/tag/v1.3)
+* gcc 10.2.0 or higher (for installing Meryl)
+* [Meryl v1.4](https://github.com/marbl/meryl/releases/tag/v1.4)
 * Java run time environment (JRE)
 * R with argparse, ggplot2, and scales (recommend R 4.0.3+)
 * bedtools
@@ -21,11 +21,25 @@ Note that igvtools is no longer used. The `.tdf` files are replaced with `.wig` 
 ## Installation
 
 ### Version supporting homopolymer compressed hapmers for Verkko (Recommended)
-Only the latest Merqury version supports `compressed` option used in Verkko.
-We are working to get a stable release out shortly, until then please use the following:
+Only the latest Merqury version supports the `compressed` option used in Verkko.
+
+* Meryl
+Get a working [Meryl](https://github.com/marbl/meryl) in your `PATH`.
+Download Meryl release: https://github.com/marbl/meryl/releases/tag/v1.4
 ```shell
-export PATH=/path/to/verkko/lib/verkko/bin:$PATH
+tar -xJf meryl-1.4.*.tar.xz
+cd meryl-1.4/bin
+export PATH=$pwd:$PATH
 ```
+
+If the binary doesn't work, download the source and compile:
+```shell
+cd meryl/src
+make -j 24
+export PATH=/path/to/meryl/…/bin:$PATH
+```
+See if we get help message with `meryl`.
+
 * Merqury
 ```shell
 git clone https://github.com/marbl/merqury.git
@@ -39,13 +53,13 @@ Other dependency:
 * samtools
 
 
-### Stable Release
+### Previous Releases
+The v1.3 Merqury is compatable with Meryl v1.3, however does not support homopolymer-compressed kmers. In addition, multiple issues were fixed (e.g. use of large k-mers, better memory utilization, minor bugs in the logs etc.) since then. Therefore, we recommend to use the latest Meryl and Merqury. The Conda version below is currently deploying v1.3.
 
 #### Direct installation 
 1. Get a working [Meryl](https://github.com/marbl/meryl) in your PATH
 
-
-Download meryl release: https://github.com/marbl/meryl/releases/tag/v1.3
+Download Meryl release: https://github.com/marbl/meryl/releases/tag/v1.3
 ```shell
 tar -xJf meryl-1.3.*.tar.xz
 cd meryl-1.3/bin
@@ -67,7 +81,7 @@ tar -zxvf v1.3.tar.gz
 cd merqury-1.3
 export MERQURY=$PWD
 ```
-Add the “export” part to your environment for both meryl and MERQURY (~/.bash_profile or ~/.profile).<br>
+Add the “export” part to your environment for `meryl` and `MERQURY` (~/.bash_profile or ~/.profile).<br>
 Add installation dir paths for `bedtools` and `samtools` to your environment.<br>
 `source` it.
 
