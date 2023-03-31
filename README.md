@@ -34,6 +34,7 @@ export PATH=$pwd:$PATH
 
 If the binary doesn't work, download the source and compile:
 ```shell
+git clone https://github.com/marbl/meryl.git
 cd meryl/src
 make -j 24
 export PATH=/path/to/meryl/…/bin:$PATH
