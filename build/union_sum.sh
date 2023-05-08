@@ -8,6 +8,9 @@ if [ -z $1 ]; then
 	exit -1
 fi
 
+set -o pipefail
+set -e
+
 k=$1
 input_fofn=$2
 output_prefix=$3.k$k
@@ -16,6 +19,18 @@ output_prefix=$3.k$k
 LEN=`wc -l $input_fofn | awk '{print $1}'`
 NUM_DBS_TO_JOIN=100	# Join every $NUM_DBS_TO_JOIN as intermediates, then merge at the end
 JOIN_IDX=0
+
+## If there is only 1 input, no need to run meryl union-sum
+if [ $LEN -eq 1 ]; then
+  echo "Only one input meryl db detected. Rename and exit."
+  meryl=`cat $input_fofn`
+  mv $meryl $output_prefix.meryl
+  meryl histogram $output_prefix.meryl > $output_prefix.hist
+  echo "Use $output_prefix.hist for genomescope etc."
+  echo "Done!"
+  exit 0
+fi
+
 
 echo "Set ulimit: ulimit -Sn 32000"
 ulimit -Sn 32000
