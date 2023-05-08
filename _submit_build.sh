@@ -8,7 +8,7 @@ if [ -z $1 ]; then
     echo -e "\t<k-size>: kmer size k"
     echo -e "\t<input.fofn>: ls *.fastq.gz > input.fofn. include both R1 and R2 for paired-end sequencing."
     echo -e "\t\taccepts fasta, fastq, gzipped or not."
-    echo -e "\t<out_prefix>: Final merged meryl db will be named as <out_prefix>.meryl"
+    echo -e "\t<out_prefix>: Final merged meryl db will be named as <out_prefix>.k\$k.meryl"
     echo -e "\t[mem=T]: Submit memory option on sbatch [DEFAULT=TRUE]. Set it to F to turn it off."
     exit 0
 fi
@@ -85,7 +85,7 @@ cpus=16 # Max: 64 per each .meryl/ file writer
 if [[ "$mem_opt" = "F" ]]; then
   mem=""
 else
-  mem="--mem=32g"
+  mem="--mem=74g"
 fi
 walltime=2:00:00
 partition=norm
