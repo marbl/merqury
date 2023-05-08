@@ -113,7 +113,7 @@ echo
 echo "# Get histogram"
 hist=inherited_hapmers.hist
 echo -e "k-mer\tkmer_multiplicity\tCount" > $hist
-meryl histogram read.only.meryl | awk -v kmer="read-only" '{print kmer"\t"$1"\t"$2}' >> $hist
+meryl histogram read.only.meryl | awk -v kmer="child-only" '{print kmer"\t"$1"\t"$2}' >> $hist
 meryl histogram $hap1.inherited.meryl | awk -v kmer="$hap1" '{print kmer"\t"$1"\t"$2}' >> $hist
 meryl histogram $hap2.inherited.meryl | awk -v kmer="$hap2" '{print kmer"\t"$1"\t"$2}' >> $hist
 meryl histogram shrd.inherited.meryl | awk -v kmer="shared" '{print kmer"\t"$1"\t"$2}' >> $hist
@@ -130,6 +130,7 @@ else
 fi
 echo
 
+echo "Rscript $MERQURY/plot/plot_spectra_cn.R -f $hist -o ${hist/.hist/} -l cutoffs.txt"
 Rscript $MERQURY/plot/plot_spectra_cn.R -f $hist -o ${hist/.hist/} -l cutoffs.txt
 echo
 
