@@ -151,7 +151,7 @@ partition=norm
 walltime=12:00:00
 
 cpus=24
-mem=28g
+mem=32g
 extra=""
 
 script="$MERQURY/trio/phase_block.sh"
@@ -189,7 +189,7 @@ if [[ "$asm2" == "" ]] ; then
 fi
 
 cpus=24
-mem=24g
+mem=32g
 extra=""
 args="$asm2 $hap1 $hap2 $out.${asm2/.fasta/}"
 name=$out.phase-block.${asm2/.fasta/}
