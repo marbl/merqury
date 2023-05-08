@@ -1,4 +1,4 @@
-#! usr/bin/env bash
+#!/usr/bin/env bash
 
 echo "Usage: ./_submit_split.sh <input.fofn>"
 echo "Split the input.fofn for every 300 million lines"
@@ -16,7 +16,8 @@ mem=4g
 name=split
 #script=$MERQURY/build/split.sh
 #script=$MERQURY/build/split_hifi.sh
-script=$MERQURY/build/split_ont.sh
+#script=$MERQURY/build/split_ont.sh
+script=$MERQURY/build/split_ont_fa.sh
 args=$1
 partition=norm
 walltime=1-0
