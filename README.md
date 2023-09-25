@@ -28,7 +28,7 @@ Get a working [Meryl](https://github.com/marbl/meryl) in your `PATH`.
 Download Meryl release: https://github.com/marbl/meryl/releases/tag/v1.4.1
 ```shell
 tar -xJf meryl-1.4.*.tar.xz
-cd meryl-1.4/bin
+cd meryl-1.4.1/bin
 export PATH=$pwd:$PATH
 ```
 
