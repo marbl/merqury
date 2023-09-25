@@ -8,7 +8,7 @@ Merqury provides a set of tools for this purpose.
 
 ## Dependency
 * gcc 10.2.0 or higher (for installing Meryl)
-* [Meryl v1.4](https://github.com/marbl/meryl/releases/tag/v1.4)
+* [Meryl v1.4.1](https://github.com/marbl/meryl/releases/tag/v1.4.1)
 * Java run time environment (JRE)
 * R with argparse, ggplot2, and scales (recommend R 4.0.3+)
 * bedtools
@@ -23,9 +23,9 @@ Note that igvtools is no longer used. The `.tdf` files are replaced with `.wig` 
 ### Version supporting homopolymer compressed hapmers for Verkko (Recommended)
 Only the latest Merqury version supports the `compressed` option used in Verkko.
 
-* Meryl
+* Meryl  
 Get a working [Meryl](https://github.com/marbl/meryl) in your `PATH`.
-Download Meryl release: https://github.com/marbl/meryl/releases/tag/v1.4
+Download Meryl release: https://github.com/marbl/meryl/releases/tag/v1.4.1
 ```shell
 tar -xJf meryl-1.4.*.tar.xz
 cd meryl-1.4/bin
