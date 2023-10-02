@@ -24,7 +24,7 @@ fi
 
 cat $db.hist.ploidy
 
-filt=`sed -n 2p $db.hist.ploidy | awk '{print $NF}'`
+filt=`cat $db.hist.ploidy | grep -v "warning" | sed -n 2p | awk '{print $NF}'`
 
 echo "
 Filter out kmers <= $filt"
