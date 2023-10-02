@@ -105,7 +105,8 @@ Get phase blocks"
 name=$out.phase-block1
 log=logs/$name.log
 
-$MERQURY/trio/phase_block.sh $asm1 $hap1 $hap2 $out.${asm1/.fasta/} &> $log
+asm1_name=`echo $asm1 | sed 's/.fasta$//g' | sed 's/.fa$//g'`
+$MERQURY/trio/phase_block.sh $asm1 $hap1 $hap2 $out.$asm1_name &> $log
 echo
 
 if [ -z $asm2 ] ; then
@@ -113,18 +114,20 @@ if [ -z $asm2 ] ; then
 	name=$out.block_N
 	log=logs/$name.log
 
-	$MERQURY/trio/block_n_stats.sh $asm1 $out.${asm1/.fasta/}.*.phased_block.bed $out
+	$MERQURY/trio/block_n_stats.sh $asm1 $out.$asm1_name.*.phased_block.bed $out
 
 	exit 0
 fi
 
 name=$out.phase-block2
 log=logs/$name.log
-$MERQURY/trio/phase_block.sh $asm2 $hap1 $hap2 $out.${asm2/.fasta/} &> $log
+
+asm2_name=`echo $asm2 | sed 's/.fasta$//g' | sed 's/.fa$//g'`
+$MERQURY/trio/phase_block.sh $asm2 $hap1 $hap2 $out.$asm2_name &> $log
 
 echo "
 Get block N plots"
 name=$out.block_N
 log=logs/$name.log
 
-$MERQURY/trio/block_n_stats.sh $asm1 $out.${asm1/.fasta/}.*.phased_block.bed $asm2 $out.${asm2/.fasta/}.*.phased_block.bed $out
+$MERQURY/trio/block_n_stats.sh $asm1 $out.$asm1_name.*.phased_block.bed $asm2 $out.$asm2_name.*.phased_block.bed $out

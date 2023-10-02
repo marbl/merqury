@@ -159,8 +159,9 @@ script="$MERQURY/trio/phase_block.sh"
 
 
 # Only one assembly given.
-args="$asm1 $hap1 $hap2 $out.${asm1/.fasta/}"
-name=$out.phase-block.${asm1/.fasta/}
+asm1_name=`echo $asm1 | sed 's/.fa$//g' | sed 's/.fasta//g'`
+args="$asm1 $hap1 $hap2 $out.$asm1_name"
+name=$out.phase-block.$asm1_name
 log=logs/$name.%A.log
 
 echo "\
@@ -180,7 +181,7 @@ if [[ "$asm2" == "" ]] ; then
 
 	# ./block_n_stats.sh <asm1.fasta> <asm1.*.phased_block.bed> [<asm2.fasta> <asm2.*.phased_block.bed>] <out> [genome_size]
 	script="$MERQURY/trio/block_n_stats.sh"
-	args="$asm1 $out.${asm1/.fasta/}.*.phased_block.bed $out"
+	args="$asm1 $out.$asm1_name.*.phased_block.bed $out"
 
 	echo "\
 	sbatch -J $name --mem=$mem --partition=$partition --cpus-per-task=$cpus -D $path $extra --time=$walltime --error=$log --output=$log $script $args"
@@ -191,8 +192,11 @@ fi
 cpus=24
 mem=32g
 extra=""
-args="$asm2 $hap1 $hap2 $out.${asm2/.fasta/}"
-name=$out.phase-block.${asm2/.fasta/}
+
+asm2_name=`echo $asm2 | sed 's/.fa$//g' | sed 's/.fasta//g'`
+
+args="$asm2 $hap1 $hap2 $out.$asm2_name"
+name=$out.phase-block.$asm2_name
 log=logs/$name.%A.log
 
 echo "\
@@ -209,7 +213,7 @@ extra="--dependency=afterok:`cat block1.jid`,afterok:`cat block2.jid`"
 
 # ./block_n_stats.sh <asm1.fasta> <asm1.*.phased_block.bed> [<asm2.fasta> <asm2.*.phased_block.bed>] <out> [genome_size]
 script="$MERQURY/trio/block_n_stats.sh"
-args="$asm1 $out.${asm1/.fasta/}.*.phased_block.bed $asm2 $out.${asm2/.fasta/}.*.phased_block.bed $out"
+args="$asm1 $out.$asm1_name.*.phased_block.bed $asm2 $out.$asm2_name.*.phased_block.bed $out"
 name=$out.block_N
 log=logs/$name.%A.log
 

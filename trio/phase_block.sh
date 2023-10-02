@@ -8,8 +8,8 @@ fi
 
 source $MERQURY/util/util.sh
 
-scaff=`link $1`
-scaff=${scaff/.fasta/}
+scaff_fa=`link $1`
+scaff=`echo $scaff | sed 's/.fasta$//g' | sed 's/.fa$//g'`
 
 hap1=`link $2`
 hap2=`link $3`
@@ -21,7 +21,7 @@ echo "Detected k-mer size: $k"
 if [[ ! -e $scaff.gaps ]]; then
   echo "
   Get gaps"
-  java -jar -Xmx4g $MERQURY/trio/fastaGetGaps.jar $scaff.fasta $scaff.gaps
+  java -jar -Xmx4g $MERQURY/trio/fastaGetGaps.jar $scaff_fa $scaff.gaps
 fi
 awk '{print $1"\t"$2"\t"$3"\tgap"}' $scaff.gaps > $scaff.gaps.bed
 cat $scaff.gaps.bed > $scaff.bed
@@ -30,7 +30,7 @@ echo "
 Generate haplotype marker sites bed
 "
 if [ ! -s $out.sort.bed ]; then
-  meryl-lookup -bed -sequence $scaff.fasta -mers $hap1 $hap2 -labels ${hap1/.meryl/} ${hap2/.meryl/} > $out.sort.bed
+  meryl-lookup -bed -sequence $scaff_fa -mers $hap1 $hap2 -labels ${hap1/.meryl/} ${hap2/.meryl/} > $out.sort.bed
 else
   echo "*** Found $out.sort.bed. Skipping this step. ***"
 fi
@@ -41,7 +41,7 @@ do
   echo "
   -- Generating $out.$hap.wig"
   if [ ! -s $out.$hap.wig ]; then
-    meryl-lookup -wig-depth -sequence $scaff.fasta -mers $hap.meryl > $out.$hap.wig
+    meryl-lookup -wig-depth -sequence $scaff_fa -mers $hap.meryl > $out.$hap.wig
   else
     echo "*** Found $out.$hap.wig. Skipping this step. ***"
   fi
