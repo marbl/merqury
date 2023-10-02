@@ -30,15 +30,15 @@ mkdir -p logs
 offset=$((LEN/1000))
 leftovers=$((LEN%1000))
 
-cpus=16 # Max: 64 per each .meryl/ file writer
+cpus=20 # Max: 64 per each .meryl/ file writer
 if [[ "$mem_opt" = "F" ]]; then
 	mem=""
 else
-	mem="--mem=24g"
+	mem="--mem=64g"
 fi
 name=$out_prefix.count
 script=$build/count.sh
-partition=norm
+partition=quick
 walltime=4:00:00
 path=`pwd`
 log=logs/$name.%A_%a.log
@@ -88,7 +88,7 @@ else
   mem="--mem=74g"
 fi
 walltime=2:00:00
-partition=norm
+partition=quick
 name=$out_prefix.union_sum
 script=$build/union_sum.sh
 log=logs/$name.%A.log
