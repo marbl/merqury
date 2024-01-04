@@ -62,8 +62,9 @@ done
 
 if [[ "$asm2_fa" == "" ]]; then
 	echo -e "No asm2 found.\nDone!"
-  echo "Remove intermediate files:
-rm -r $asm1.0.meryl"
+#  echo "Remove intermediate files:
+#rm -r $asm1.0.meryl"
+  cat $name.qv
 	exit 0
 fi
 
@@ -86,3 +87,4 @@ echo "Done!"
 #echo "Remove intermediate files:
 #rm -r $asm1.0.meryl $asm2.0.meryl $asm.0.meryl"
 
+cat $name.qv
