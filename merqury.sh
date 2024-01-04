@@ -105,7 +105,7 @@ Get phase blocks"
 name=$out.phase-block1
 log=logs/$name.log
 
-asm1_name=`echo $asm1 | sed 's/.fasta$//g' | sed 's/.fa$//g'`
+asm1_name=`echo $asm1 | sed 's/\.fasta$//g' | sed 's/\.fa$//g'`
 $MERQURY/trio/phase_block.sh $asm1 $hap1 $hap2 $out.$asm1_name &> $log
 echo
 
@@ -122,7 +122,7 @@ fi
 name=$out.phase-block2
 log=logs/$name.log
 
-asm2_name=`echo $asm2 | sed 's/.fasta$//g' | sed 's/.fa$//g'`
+asm2_name=`echo $asm2 | sed 's/\.fasta$//g' | sed 's/\.fa$//g'`
 $MERQURY/trio/phase_block.sh $asm2 $hap1 $hap2 $out.$asm2_name &> $log
 
 echo "

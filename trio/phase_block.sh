@@ -9,7 +9,7 @@ fi
 source $MERQURY/util/util.sh
 
 scaff_fa=`link $1`
-scaff=`echo $scaff | sed 's/.fasta$//g' | sed 's/.fa$//g'`
+scaff=`echo $scaff | sed 's/\.fasta$//g' | sed 's/\.fa$//g'`
 
 hap1=`link $2`
 hap2=`link $3`

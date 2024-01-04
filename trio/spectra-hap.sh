@@ -60,7 +60,7 @@ echo
 for asm_fa in $asm1_fa $asm2_fa
 do
     asm_fa=`link $asm_fa`
-    asm=`echo $asm_fa | sed 's/.fasta$//g' | sed 's/.fa$//g' | sed 's/.fasta.gz$//g' | sed 's/.fa.gz$//g'`
+    asm=`echo $asm_fa | sed 's/\.fasta$//g' | sed 's/\.fa$//g' | sed 's/\.fasta\.gz$//g' | sed 's/\.fa\.gz$//g'`
     if ! [[ "$(ls -A $asm.meryl 2> /dev/null )" ]]; then
         echo "Generate meryl db for $asm_fa"
         meryl count k=$k output $asm.meryl $compress $asm_fa
@@ -128,8 +128,8 @@ if [[ "$asm2_fa" = "" ]]; then
 fi
 
 echo "# Combined hap-mer completeness"
-asm1=`echo $asm1_fa | sed 's/.fasta$//g' | sed 's/.fa$//g' | sed 's/.fasta.gz$//g' | sed 's/.fa.gz$//g'`
-asm2=`echo $asm2_fa | sed 's/.fasta$//g' | sed 's/.fa$//g' | sed 's/.fasta.gz$//g' | sed 's/.fa.gz$//g'`
+asm1=`echo $asm1_fa | sed 's/\.fasta$//g' | sed 's/\.fa$//g' | sed 's/\.fasta\.gz$//g' | sed 's/\.fa\.gz$//g'`
+asm2=`echo $asm2_fa | sed 's/\.fasta$//g' | sed 's/\.fa$//g' | sed 's/\.fasta\.gz$//g' | sed 's/\.fa\.gz$//g'`
 meryl union-sum output both.meryl $asm1.meryl $asm2.meryl
 for read_hap in $read_hap1 $read_hap2
 do

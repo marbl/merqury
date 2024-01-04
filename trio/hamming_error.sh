@@ -7,10 +7,10 @@ if [[ "$#" -lt 2 ]]; then
 fi
 
 COUNT=$1
-ASM1=`echo $2 | sed 's/.fasta$//g' | sed 's/.fa$//g' |sed 's/.fasta.gz$//g' | sed 's/.fa.gz$//g'`
+ASM1=`echo $2 | sed 's/\.fasta$//g' | sed 's/\.fa$//g' |sed 's/\.fasta\.gz$//g' | sed 's/\.fa\.gz$//g'`
 
 if ! [[ -z $3 ]]; then
-  ASM2=`echo $3 | sed 's/.fasta$//g' | sed 's/.fa$//g' |sed 's/.fasta.gz$//g' | sed 's/.fa.gz$//g'`
+  ASM2=`echo $3 | sed 's/\.fasta$//g' | sed 's/\.fa$//g' |sed 's/\.fasta\.gz$//g' | sed 's/\.fa\.gz$//g'`
 fi
 
 if ! [[ -s $COUNT ]]; then
