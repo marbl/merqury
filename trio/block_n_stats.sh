@@ -2,7 +2,7 @@
 
 
 if [[ "$#" -lt 3 ]]; then
-    echo "Usage: ./block_n_stats.sh <asm1.fasta> <asm1.*.phased_block.bed> [<asm2.fasta> <asm2.*.phased_block.bed>] <out> [genome_size]"
+    echo "Usage: ./block_n_stats.sh <asm1.fasta> <out.asm1.*.phased_block.bed> [<asm2.fasta> <out.asm2.*.phased_block.bed>] <out> [genome_size]"
     echo
     echo -e "\t<asm1.fasta>:\tAssembly 1 fasta file"
     echo -e "\t<*.asm1.*.phased_block.bed>:\tAssembly 1 phased block .bed file"
@@ -16,19 +16,19 @@ if [[ "$#" -lt 3 ]]; then
 fi
 
 asm1=$1
-asm1=${asm1/.fasta/}
+asm1_name=`echo $asm1 | sed 's/\.fasta$//g' | sed 's/\.fa$//g'`
 block1=$2
 
 asm2=""
 if [[ "$#" -gt 4 ]]; then
-    asm2=$3
-    asm2=${asm2/.fasta/}
-    block2=$4
-    out=$5
-    g_size=$6
+  asm2=$3
+  asm2_name=`echo $asm2 | sed 's/\.fasta$//g' | sed 's/\.fa$//g'`
+  block2=$4
+  out=$5
+  g_size=$6
 else
-    out=$3
-    g_size=$4
+  out=$3
+  g_size=$4
 fi
 
 source $MERQURY/util/util.sh
@@ -44,31 +44,32 @@ fi
 
 for asm in $asm1 $asm2
 do
-    if [[ ! -e $asm.fasta.fai ]]; then
-        echo "# Generate $asm.fasta.fai"
-        samtools faidx $asm.fasta
+    if [[ ! -e $asm.fai ]]; then
+        echo "# Generate $asm.fai"
+        samtools faidx $asm
     else
-        echo "*** # Found $asm.fasta.fai ***"
+        echo "*** # Found $asm.fai ***"
     fi
     echo
 
-    if [[ ! -e $asm.gaps.bed ]]; then
+    asm_name=`echo $asm | sed 's/\.fasta$//g' | sed 's/\.fa$//g'`
+    if [[ ! -e $asm_name.gaps.bed ]]; then
         echo "# Get gaps"
-        java -jar -Xmx4g $MERQURY/trio/fastaGetGaps.jar $asm.fasta $asm.gaps
-        awk -F "\t" '{print $1"\t"$2"\t"$3"\tgap"}' $asm.gaps > $asm.gaps.bed
+        java -jar -Xmx4g $MERQURY/trio/fastaGetGaps.jar $asm $asm_name.gaps
+        awk -F "\t" '{print $1"\t"$2"\t"$3"\tgap"}' $asm_name.gaps > $asm_name.gaps.bed
     else
-        echo "*** # Found $asm.gaps.bed ***"
+        echo "*** # Found $asm_name.gaps.bed ***"
     fi
     echo
     
-    num_gaps=`wc -l $asm.gaps.bed | awk '{print $1}'`
+    num_gaps=`wc -l $asm_name.gaps.bed | awk '{print $1}'`
     if [[ $num_gaps -gt 0 ]]; then
         echo "# Found $num_gaps. Generating stats for both scaffolds and contigs."
-        awk -v asm=$asm '{print "scaffold\t"asm"\t"$2}' $asm.fasta.fai | sort -nr -k3 - > $out.$asm.scaff.sizes
-        awk '{print $1"\t0\t"$2}' $asm.fasta.fai | bedtools subtract -a - -b $asm.gaps.bed | awk -v asm=$asm '{print "contig\t"asm"\t"($NF-$(NF-1))}' | sort -nr -k3 - > $out.$asm.contig.sizes
+        awk -v asm=$asm_name '{print "scaffold\t"asm"\t"$2}' $asm.fai | sort -nr -k3 - > $out.$asm_name.scaff.sizes
+        awk '{print $1"\t0\t"$2}' $asm.fai | bedtools subtract -a - -b $asm_name.gaps.bed | awk -v asm=$asm_name '{print "contig\t"asm"\t"($NF-$(NF-1))}' | sort -nr -k3 - > $out.$asm_name.contig.sizes
     else
         echo "# No gaps found. This is a contig set."
-        awk -v asm=$asm '{print "contig\t"asm"\t"$2}' $asm.fasta.fai | sort -nr -k3 - > $out.$asm.contig.sizes
+        awk -v asm=$asm_name '{print "contig\t"asm"\t"$2}'   $asm.fai | sort -nr -k3 - > $out.$asm_name.contig.sizes
     fi
     echo
 done
@@ -79,8 +80,8 @@ awk -v asm="block" -F "\t" '{print asm"\t"$4"\t"($3-$2)}' $block1 | sort -nr -k3
 echo " Result saved as ${block1/.bed/.sizes}"
 echo
 
-if [[ -s $out.$asm1.scaff.sizes ]]; then
-    scaff="-s $out.$asm1.scaff.sizes"
+if [[ -s $out.$asm1_name.scaff.sizes ]]; then
+    scaff="-s $out.$asm1_name.scaff.sizes"
 fi
 
 if [[ "$g_size" != "" ]]; then
@@ -89,8 +90,8 @@ fi
 
 echo "# Plot $block1"
 echo "\
-Rscript $MERQURY/plot/plot_block_N.R -b ${block1/.bed/.sizes} -c $out.$asm1.contig.sizes $scaff -o $out.$asm1 $g_size"
-Rscript $MERQURY/plot/plot_block_N.R -b ${block1/.bed/.sizes} -c $out.$asm1.contig.sizes $scaff -o $out.$asm1 $g_size
+Rscript $MERQURY/plot/plot_block_N.R -b ${block1/.bed/.sizes} -c $out.$asm1_name.contig.sizes $scaff -o $out.$asm1_name $g_size"
+Rscript $MERQURY/plot/plot_block_N.R -b ${block1/.bed/.sizes} -c $out.$asm1_name.contig.sizes $scaff -o $out.$asm1_name $g_size
 echo
 
 if [[ "$block2" == "" ]]; then
@@ -104,13 +105,13 @@ awk -v asm="block" -F "\t" '{print asm"\t"$4"\t"($3-$2)}' $block2 | sort -nr -k3
 echo " Result saved as ${block2/.bed/.sizes}"
 echo
 
-if [[ -s $out.$asm2.scaff.sizes ]]; then
-    scaff="-s $out.$asm2.scaff.sizes"
+if [[ -s $out.$asm2_name.scaff.sizes ]]; then
+    scaff="-s $out.$asm2_name.scaff.sizes"
 fi
 
 echo "# Plot $block2"
 echo "\
-Rscript $MERQURY/plot/plot_block_N.R -b ${block2/.bed/.sizes} -c $out.$asm2.contig.sizes $scaff -o $out.$asm2 $g_size"
-Rscript $MERQURY/plot/plot_block_N.R -b ${block2/.bed/.sizes} -c $out.$asm2.contig.sizes $scaff -o $out.$asm2 $g_size
+Rscript $MERQURY/plot/plot_block_N.R -b ${block2/.bed/.sizes} -c $out.$asm2_name.contig.sizes $scaff -o $out.$asm2_name $g_size"
+Rscript $MERQURY/plot/plot_block_N.R -b ${block2/.bed/.sizes} -c $out.$asm2_name.contig.sizes $scaff -o $out.$asm2_name $g_size
 echo
 
