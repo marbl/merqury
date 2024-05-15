@@ -34,7 +34,7 @@ cpus=20 # Max: 64 per each .meryl/ file writer
 if [[ "$mem_opt" = "F" ]]; then
 	mem=""
 else
-	mem="--mem=64g"
+	mem="--mem=120g"
 fi
 name=$out_prefix.count
 script=$build/count.sh
@@ -67,10 +67,10 @@ WAIT="afterok:"`cat meryl_count.jid | tr '\n' ',afterok:'`
 WAIT=${WAIT%,}
 
 ## Collect .meryl list
-if [ -e  meryl_count.meryl.list ]; then
+if [ -e  $out_prefix.meryl_count.meryl.list ]; then
   echo "Removing meryl_count.meryl.list"
-  cat meryl_count.meryl.list
-  rm  meryl_count.meryl.list
+  cat $out_prefix.meryl_count.meryl.list
+  rm  $out_prefix.meryl_count.meryl.list
 fi
 
 for line_num in $(seq 1 $LEN)
@@ -78,7 +78,7 @@ do
   input=`sed -n ${line_num}p $input_fofn`
   name=`echo $input | sed 's/.fastq.gz$//g' | sed 's/.fq.gz$//g' | sed 's/.fasta$//g' | sed 's/.fa$//g' | sed 's/.fasta.gz$//g' | sed 's/.fa.gz$//g'`
   name=`basename $name`
-  echo "$name.k$k.$line_num.meryl" >> meryl_count.meryl.list
+  echo "$name.k$k.$line_num.meryl" >> $out_prefix.meryl_count.meryl.list
 done
 
 cpus=16 # Max: 64 per each .meryl/ file writer
@@ -92,7 +92,7 @@ partition=quick
 name=$out_prefix.union_sum
 script=$build/union_sum.sh
 log=logs/$name.%A.log
-args="$k meryl_count.meryl.list $out_prefix"
+args="$k $out_prefix.meryl_count.meryl.list $out_prefix"
 echo "\
 sbatch -J $name $mem --partition=$partition --cpus-per-task=$cpus -D $path --dependency=$WAIT --time=$walltime --error=$log --output=$log $script $args"
 sbatch -J $name $mem --partition=$partition --cpus-per-task=$cpus -D $path --dependency=$WAIT --time=$walltime --error=$log --output=$log $script $args | awk '{print $NF}' > meryl_union_sum.jid
