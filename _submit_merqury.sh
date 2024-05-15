@@ -118,7 +118,7 @@ walltime=4:00:00
 
 #### Get blob plots
 cpus=12
-mem=16g
+mem=24g
 
 script="$MERQURY/trio/hap_blob.sh"
 # ./hap_blob.sh <hap1.meryl> <hap2.meryl> <asm1.fasta> [asm2.fasta] <out>
@@ -133,7 +133,7 @@ sbatch -J $name --mem=$mem --partition=$partition --cpus-per-task=$cpus -D $path
 
 #### Get haplotype specfic spectra-cn plots
 cpus=24
-mem=10g
+mem=16g
 extra="--dependency=afterok:$jid"	# Re-uses asm.meryl dbs in spectra-cn.sh.
 
 name=$out.spectra-hap
@@ -159,7 +159,7 @@ script="$MERQURY/trio/phase_block.sh"
 
 
 # Only one assembly given.
-asm1_name=`echo $asm1 | sed 's/.fa$//g' | sed 's/.fasta//g'`
+asm1_name=`echo $asm1 | sed 's/\.gz$//g' | sed 's/\.fa$//g' | sed 's/\.fasta//g'`
 args="$asm1 $hap1 $hap2 $out.$asm1_name"
 name=$out.phase-block.$asm1_name
 log=logs/$name.%A.log
@@ -193,7 +193,7 @@ cpus=24
 mem=32g
 extra=""
 
-asm2_name=`echo $asm2 | sed 's/.fa$//g' | sed 's/.fasta//g'`
+asm2_name=`echo $asm2 | sed 's/\.gz//g' | sed 's/\.fa$//g' | sed 's/\.fasta//g'`
 
 args="$asm2 $hap1 $hap2 $out.$asm2_name"
 name=$out.phase-block.$asm2_name

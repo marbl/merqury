@@ -43,7 +43,7 @@ count=$out.hapmers.count
 echo -e "Assembly\tContig\t${hap1/.meryl}\t${hap2/.meryl}\tSize" > $count
 for asm in $asm1 $asm2
 do
-  name=`echo $asm | sed 's/\.fasta$//g' | sed 's/\.fa$//g' | sed 's/\.fasta\.gz$//g' | sed 's/\.fa\.gz$//g'`
+  name=`echo $asm | sed 's/\.gz$//g' | sed 's/\.fasta$//g' | sed 's/\.fa$//g'`
   echo "
   Start processing $name"
 
