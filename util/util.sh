@@ -12,6 +12,6 @@ function link()
 function check_module()
 {
   module -v 1> /dev/null 2> /dev/null
-  echo $? # Uncomment for HPCs supporting modules
-  #echo 1   # Always set as 1 for conda release by default
+  #echo $? # Uncomment for HPCs supporting modules
+  echo 1   # Always set as 1 for conda release by default
 }
