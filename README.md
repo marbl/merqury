@@ -53,9 +53,37 @@ Other dependency:
 * bedtools
 * samtools
 
+#### Through Conda (currently deploying Meryl v1.4.1, commit 5f3f1eb)
+
+Thanks to @EdHarry, a conda recipe is now available: https://anaconda.org/bioconda/merqury <br>
+On a new conda environment, run:
+```shell
+conda install -c conda-forge -c bioconda merqury
+```
+
+Or, if you have a different version of jdk installed or want to have a separate conda environnment for merqury:
+```shell
+conda create -n merqury -c conda-forge -c bioconda merqury openjdk=11
+```
+
+You will then need to activate the merqury environment before using it with:
+```shell
+conda activate merqury
+```
+
+Test running
+```Shell
+Rscript $MERQURY/plot/plot_spectra_cn.R --help
+```
+
+In case R complains for version mismatches of the R packages, try
+```Shell
+conda update --all
+```
+It seems like R in conda isn't maintained anymore. Try to modify channel priority in `.condarc`.
 
 ### Previous Releases
-The v1.3 Merqury is compatable with Meryl v1.3, however does not support homopolymer-compressed kmers. In addition, multiple issues were fixed (e.g. use of large k-mers, better memory utilization, minor bugs in the logs etc.) since then. Therefore, we recommend to use the latest Meryl and Merqury. The Conda version below is currently deploying v1.3.
+The v1.3 Merqury is compatable with Meryl v1.3, however does not support homopolymer-compressed kmers. In addition, multiple issues were fixed (e.g. use of large k-mers, better memory utilization, minor bugs in the logs etc.) since then. Therefore, we recommend to use the latest Meryl and Merqury.
 
 #### Direct installation 
 1. Get a working [Meryl](https://github.com/marbl/meryl) in your PATH
@@ -85,34 +113,6 @@ export MERQURY=$PWD
 Add the “export” part to your environment for `meryl` and `MERQURY` (~/.bash_profile or ~/.profile).<br>
 Add installation dir paths for `bedtools` and `samtools` to your environment.<br>
 `source` it.
-
-#### Through Conda
-Thanks to @EdHarry, a conda recipe is now available: https://anaconda.org/bioconda/merqury <br>
-On a new conda environment, run:
-```shell
-conda install -c conda-forge -c bioconda merqury
-```
-
-Or, if you have a different version of jdk installed or want to have a separate conda environnment for merqury:
-```shell
-conda create -n merqury -c conda-forge -c bioconda merqury openjdk=11
-```
-
-You will then need to activate the merqury environment before using it with:
-```shell
-conda activate merqury
-```
-
-Test running 
-```Shell
-Rscript $MERQURY/plot/plot_spectra_cn.R --help
-```
-
-In case R complains for version mismatches of the R packages, try
-```Shell
-conda update --all
-```
-It seems like R in conda isn't maintained anymore. Try to modify channel priority in `.condarc`.
 
 ## Run
 
