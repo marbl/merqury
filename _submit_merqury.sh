@@ -91,7 +91,7 @@ extra=""
 
 #### Get spectra-cn plots and QV stats
 cpus=24
-mem=24g
+mem=48g
 name=$out.spectra-cn
 script="$MERQURY/eval/spectra-cn.sh"
 args="$compress $readdb $asm1 $asm2 $out"
