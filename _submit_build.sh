@@ -33,6 +33,8 @@ leftovers=$((LEN%1000))
 cpus=20 # Max: 64 per each .meryl/ file writer
 if [[ "$mem_opt" = "F" ]]; then
 	mem=""
+elif [[ "x$mem_opt" != "x" ]]; then
+	mem=$mem_opt
 else
 	mem="--mem=120g"
 fi
@@ -43,10 +45,10 @@ walltime=4:00:00
 path=`pwd`
 log=logs/$name.%A_%a.log
 
-if [ -e meryl_count.jid ]; then
-  echo "Removing meryl_count.jid"
-  cat meryl_count.jid
-  rm meryl_count.jid
+if [ -e $out_prefix.meryl_count.jid ]; then
+  echo "Removing $out_prefix.meryl_count.jid"
+  cat $out_prefix.meryl_count.jid
+  rm $out_prefix.meryl_count.jid
 fi
 
 for i in $(seq 0 $offset)
@@ -59,11 +61,11 @@ do
   fi
   echo "\
   sbatch -J $name $mem --partition=$partition --cpus-per-task=$cpus -D $path --array=1-$arr_max --time=$walltime --error=$log --output=$log $script $args"
-  sbatch -J $name $mem --partition=$partition --cpus-per-task=$cpus -D $path --array=1-$arr_max --time=$walltime --error=$log --output=$log $script $args | awk '{print $NF}' > meryl_count.jid
+  sbatch -J $name $mem --partition=$partition --cpus-per-task=$cpus -D $path --array=1-$arr_max --time=$walltime --error=$log --output=$log $script $args | awk '{print $NF}' > $out_prefix.meryl_count.jid
 done
 
 # Wait for these jobs
-WAIT="afterok:"`cat meryl_count.jid | tr '\n' ',afterok:'`
+WAIT="afterok:"`cat $out_prefix.meryl_count.jid | tr '\n' ',afterok:'`
 WAIT=${WAIT%,}
 
 ## Collect .meryl list
@@ -84,8 +86,10 @@ done
 cpus=16 # Max: 64 per each .meryl/ file writer
 if [[ "$mem_opt" = "F" ]]; then
   mem=""
+elif [[ "x$mem_opt" != "x" ]]; then
+  mem=$mem_opt
 else
-  mem="--mem=74g"
+  mem="--mem=120g"
 fi
 walltime=2:00:00
 partition=quick
@@ -95,5 +99,5 @@ log=logs/$name.%A.log
 args="$k $out_prefix.meryl_count.meryl.list $out_prefix"
 echo "\
 sbatch -J $name $mem --partition=$partition --cpus-per-task=$cpus -D $path --dependency=$WAIT --time=$walltime --error=$log --output=$log $script $args"
-sbatch -J $name $mem --partition=$partition --cpus-per-task=$cpus -D $path --dependency=$WAIT --time=$walltime --error=$log --output=$log $script $args | awk '{print $NF}' > meryl_union_sum.jid
+sbatch -J $name $mem --partition=$partition --cpus-per-task=$cpus -D $path --dependency=$WAIT --time=$walltime --error=$log --output=$log $script $args | awk '{print $NF}' > $out_prefix.meryl_union_sum.jid
 
