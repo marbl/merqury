@@ -23,9 +23,11 @@ blue = "#377EB8" # light blue = "#56B4E9"
 green = "#4DAF4A"
 purple = "#984EA3"  # purple = "#CC79A7"
 orange = "#FF7F00"  # orange = "#E69F00"
-yellow = "#FFFF33"
+yellow = "#FFCC99"
+pink = "#FA99FF"
+torq = "#00CCCC"
 
-merqury_col = c(gray, red, blue, green, purple, orange)
+merqury_col = c(gray, red, blue, green, purple, orange, yellow, pink, torq)
 merqury_brw <- function(dat, direction=1) {
   merqury_colors=merqury_col[1:length(unique(dat))]
   if (direction == -1) {
