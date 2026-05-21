@@ -1,16 +1,16 @@
 #!/usr/bin/env bash
 
 if [[ "$#" -lt 3 ]]; then
-	echo "Usage: ./qv.sh <read.meryl> <asm1.fasta> [asm2.fasta] <out>"
-	echo
-	echo -e "\t<read.meryl>:\tk-mer db of the (illumina) read set"
-	echo -e "\t<asm1.fasta>:\t assembly 1"
-	echo -e "\t[asm2.fasta]:\t assembly 2, optional"
-	echo -e "\t<out>.qv:\tQV of asm1, asm2 and both (asm1+asm2)"
-	echo
-	echo "** This script calculates the QV only and exits. **"
-	echo "   Run spectra_cn.sh for full copy number analysis."
-	exit 0
+  echo "Usage: ./qv.sh <read.meryl> <asm1.fasta> [asm2.fasta] <out>"
+  echo
+  echo -e "\t<read.meryl>:\tk-mer db of the (illumina) read set"
+  echo -e "\t<asm1.fasta>:\t assembly 1"
+  echo -e "\t[asm2.fasta]:\t assembly 2, optional"
+  echo -e "\t<out>.qv:\tQV of asm1, asm2 and both (asm1+asm2)"
+  echo
+  echo "** This script calculates the QVs and generates error bed file. **"
+  echo "   Run spectra_cn.sh for full copy number analysis."
+  exit 0
 fi
 source $MERQURY/util/util.sh
 
@@ -22,25 +22,45 @@ k=`meryl print $read_db | head -n 2 | tail -n 1 | awk '{print length($1)}'`
 echo "Detected k-mer size $k"
 
 if [[ "$#" -eq 3 ]]; then
-	asm2_fa=""
-	name=$3
+  asm2_fa=""
+  name=$3
 else
-	asm2_fa=`link $3`
-	echo "Found asm2: $asm2_fa"
+  asm2_fa=`link $3`
+  echo "Found asm2: $asm2_fa"
 fi
 
-asm1=`echo $asm1_fa | sed 's/.fasta.gz//g' | sed 's/.fa.gz//g' | sed 's/.fasta//g' | sed 's/.fa//g'`
+if [[ -s $name.qv ]]; then
+  echo "$name.qv already exists, removing and recalculating..."
+  rm $name.qv
+fi
+
+if [[ -s ${name}_only.bed ]]; then
+  echo "${name}_only.bed already exists, removing and recalculating..."
+  rm ${name}_only.bed ${name}_only.wig
+fi
+
+has_module=$(check_module)
+if [[ $has_module -gt 0 ]]; then
+  echo "No modules available.."
+else
+  module load bedtools # 2.31.1
+fi
+
+set -x
 for asm_fa in $asm1_fa $asm2_fa
 do
-	asm=`echo $asm_fa | sed 's/.fasta.gz//g' | sed 's/.fa.gz//g' | sed 's/.fasta//g' | sed 's/.fa//g'`
+  asm=`basename $asm_fa`
+  asm=`echo $asm | sed 's/\.gz$//g' | sed 's/.fa$//g' | sed 's/.fasta$//g'`
 
-	if [[ ! -e $asm.meryl ]]; then
-		echo "# Generate meryl db for $asm"
-		meryl count k=$k output $asm.meryl $asm_fa
-		echo
-	fi
+  if [[ ! -s $asm.meryl ]]; then
+    echo "# Generate meryl db for $asm"
+    meryl count k=$k output $asm.meryl $asm_fa
+    echo
+  fi
 
-	meryl difference output $asm.0.meryl $asm.meryl $read_db
+  if [[ ! -s $asm.0.meryl ]]; then
+    meryl difference output $asm.0.meryl $asm.meryl $read_db
+  fi
 
   echo "# QV statistics for $asm"
   ASM_ONLY=`meryl statistics $asm.0.meryl  | head -n4 | tail -n1 | awk '{print $2}'`
@@ -54,24 +74,31 @@ do
   fi
   echo
 
-  meryl-lookup -existence -sequence $asm_fa -mers $asm.0.meryl/ | \
+  meryl-lookup -existence -sequence $asm_fa -mers $asm.0.meryl | \
     awk -v k=$k '{if ($2==0) {err="na"; qv="na"} \
                  else        {err=(1-(1-$4/$2)^(1/k)); qv=(-10*log(err)/log(10))}; \
                  print $1"\t"$4"\t"$2"\t"qv"\t"err}' > $name.$asm.qv
+  meryl-lookup -bed -sequence $asm_fa -mers $asm.0.meryl | bedtools merge -i - >> ${name}_only.bed
+  meryl-lookup -wig-depth -sequence $asm_fa -mers ${asm}.0.meryl >> ${name}_only.wig
 done
 
 if [[ "$asm2_fa" == "" ]]; then
-	echo -e "No asm2 found.\nDone!"
-#  echo "Remove intermediate files:
-#rm -r $asm1.0.meryl"
+  echo -e "No asm2 found.\nDone!\n"
+# echo "Remove intermediate files:
+# rm -r $asm1.0.meryl"
   cat $name.qv
-	exit 0
+  exit 0
 fi
 
-asm2=`echo $asm2_fa | sed 's/.fasta.gz//g' | sed 's/.fa.gz//g' | sed 's/.fasta//g' | sed 's/.fa//g'`
+asm1=`basename $asm1_fa`
+asm1=`echo $asm1 | sed 's/\.gz$//g' | sed 's/.fa$//g' | sed 's/.fasta$//g'`
+
+asm2=`basename $asm2_fa`
+asm2=`echo $asm2 | sed 's/\.gz$//g' | sed 's/.fa$//g' | sed 's/.fasta$//g'`
 
 asm="both"
 
+echo "# Generate meryl db for $asm (both assemblies)"
 meryl union-sum output $asm.meryl   $asm1.meryl   $asm2.meryl
 meryl union-sum output $asm.0.meryl $asm1.0.meryl $asm2.0.meryl
 
@@ -84,7 +111,7 @@ echo -e "$asm\t$ASM_ONLY\t$TOTAL\t$QV\t$ERROR" >> $name.qv
 echo
 
 echo "Done!"
-#echo "Remove intermediate files:
-#rm -r $asm1.0.meryl $asm2.0.meryl $asm.0.meryl"
+# echo "Remove intermediate files:
+# rm -r $asm1.0.meryl $asm2.0.meryl $asm.0.meryl"
 
 cat $name.qv
