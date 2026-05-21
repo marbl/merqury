@@ -12,19 +12,15 @@ db=$1
 db=${db/.meryl/}
 out=$2
 
-echo "Generate $db.hist"
-meryl histogram $db.meryl > $db.hist
-
 if [[ -s $db.hist.ploidy ]]; then
   echo -e "\nFound $db.hist.ploidy. Re-using it.\n"
 else
-  echo -e "\njava -jar -Xmx1g $MERQURY/eval/kmerHistToPloidyDepth.jar $db.hist > $db.hist.ploidy"
-  java -jar -Xmx1g $MERQURY/eval/kmerHistToPloidyDepth.jar $db.hist > $db.hist.ploidy
+  meryl ploidy $db.meryl > $db.hist.ploidy
 fi
 
 cat $db.hist.ploidy
 
-filt=`cat $db.hist.ploidy | grep -v "warning" | sed -n 2p | awk '{print $NF}'`
+filt=`awk '$1=="noise-trough" {print int($2)+($2>int($2))}' $db.hist.ploidy`
 
 echo "
 Filter out kmers <= $filt"
